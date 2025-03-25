@@ -18,8 +18,8 @@ samples = 1000
 nChains = 4
 nfolds = NULL # Default: two-fold cross-validation
 cv.level = "depth" 
-nParallel = NULL # Default: nParallel = nChains
-if(is.null(nParallel)) nParallel = nChains
+nParallel = 1 # Default: nParallel = nChains
+# if(is.null(nParallel)) nParallel = nChains
 if(is.null(nfolds)) nfolds = 2
 
 
