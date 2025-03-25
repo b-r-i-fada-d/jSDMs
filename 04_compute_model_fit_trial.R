@@ -27,7 +27,7 @@ rm(m_ENV_1000)
 # 
 # 
 # filename.in = file.path(model.directory, paste("models_thin_", as.character(thin), "_samples_", as.character(samples), "_chains_", as.character(nChains), ".Rdata", sep = ""))
-filename.out = file.path(model.directory, paste("MF_thin_", as.character(thin), "_samples_", as.character(samples), "_chains_", as.character(nChains), "_nfolds_", as.character(nfolds), "_cvlevel_", cv.level, ".Rdata", sep = ""))
+# filename.out = model.directory/paste("MF_thin_", as.character(thin), "_samples_", as.character(samples), "_chains_", as.character(nChains), "_nfolds_", as.character(nfolds), "_cvlevel_", cv.level, ".Rdata", sep = "")
 # 
 # if (file.exists(filename.in)) {
 #   print(paste0("thin = ", as.character(thin), "; samples = ", as.character(samples)))
@@ -48,5 +48,5 @@ filename.out = file.path(model.directory, paste("MF_thin_", as.character(thin), 
   
   save(MF, 
        # MFCV, 
-       WAIC, file = filename.out)
+       WAIC, file = "results/ENV")
 # }
