@@ -12,16 +12,16 @@ set.seed(13)
 
 # --- SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE --- ####
 
-load("models/models_thin_1_samples_1000_chains_4.Rdata")
-model <- m_ENV_1000
-rm(m_ENV_1000)
+load("models/models_thin_1_samples_500_chains_4.Rdata")
+model <- m_FULL_500
+rm(m_FULL_500)
 
 # thin = 1
 # samples = 1000
 # nChains = 4
 # nfolds = NULL # Default: two-fold cross-validation
 # cv.level = "depth" 
-# nParallel = 1 # Default: nParallel = nChains
+nParallel = 1 # Default: nParallel = nChains
 # if(is.null(nParallel)) nParallel = nChains
 # if(is.null(nfolds)) nfolds = 2
 # 
@@ -48,5 +48,5 @@ rm(m_ENV_1000)
   
   save(MF, 
        # MFCV, 
-       WAIC, file = "results/ENV")
+       WAIC, file = "results/FULL_500")
 # }
