@@ -20,7 +20,7 @@ rm(m_ENV_500)
 # samples = 1000
 # nChains = 4
 nfolds = NULL # Default: two-fold cross-validation
-cv.level = "station" 
+cv.level = "year"
 nParallel = 1 # Default: nParallel = nChains
 # if(is.null(nParallel)) nParallel = nChains
 # if(is.null(nfolds)) nfolds = 2
@@ -38,11 +38,21 @@ nParallel = 1 # Default: nParallel = nChains
 
   preds = computePredictedValues(model)
   MF = evaluateModelFit(hM = model, predY = preds)
-  partition = createPartition(model, nfolds = nfolds, column = cv.level)
-  predsCV = computePredictedValues(model,
-                                   partition = partition,
-                                   nParallel = nParallel
-                                   )
+  # partition = createPartition(model, nfolds = nfolds, column = cv.level)
+  # predsCV = computePredictedValues(model,
+  #                                  partition = partition,
+  #                                  nParallel = nParallel
+  #                                  )
+
+#  try to reduce memory usage  
+  for (fold in 1:nfolds) {
+    partition = createPartition(model, nfolds = nfolds, column = cv.level)
+    predsCV = computePredictedValues(model, partition = partition, nParallel = 1)
+    saveRDS(predsCV, file = paste0("preds_fold_", fold, ".rds"))  # Save to disk
+    rm(partition, predsCV)
+    gc()
+  }
+  
   MFCV = evaluateModelFit(hM = model, predY = predsCV)
   WAIC = computeWAIC(model)
   
