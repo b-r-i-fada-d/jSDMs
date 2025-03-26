@@ -13,50 +13,27 @@ set.seed(13)
 # --- SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE --- ####
 
 load("models/models_thin_1_samples_500_chains_4.Rdata")
-model <- m_ENV_500
-rm(m_ENV_500)
+model <- m_SPACE_500
+rm(m_SPACE_500)
 
 # thin = 1
 # samples = 1000
 # nChains = 4
-nfolds = NULL # Default: two-fold cross-validation
-cv.level = "year"
+# nfolds = NULL # Default: two-fold cross-validation
+# cv.level = "year"
 nParallel = 1 # Default: nParallel = nChains
-# if(is.null(nParallel)) nParallel = nChains
-# if(is.null(nfolds)) nfolds = 2
-# 
-# 
-# filename.in = file.path(model.directory, paste("models_thin_", as.character(thin), "_samples_", as.character(samples), "_chains_", as.character(nChains), ".Rdata", sep = ""))
-# filename.out = model.directory/paste("MF_thin_", as.character(thin), "_samples_", as.character(samples), "_chains_", as.character(nChains), "_nfolds_", as.character(nfolds), "_cvlevel_", cv.level, ".Rdata", sep = "")
-# 
-# if (file.exists(filename.in)) {
-#   print(paste0("thin = ", as.character(thin), "; samples = ", as.character(samples)))
-#   print(date())
-#   load(file = filename.in)
-#   
-#   model = m_ENV_1000
+ 
 
-  preds = computePredictedValues(model)
-  MF = evaluateModelFit(hM = model, predY = preds)
-  # partition = createPartition(model, nfolds = nfolds, column = cv.level)
-  # predsCV = computePredictedValues(model,
-  #                                  partition = partition,
-  #                                  nParallel = nParallel
-  #                                  )
-
-#  try to reduce memory usage  
-  for (fold in 1:nfolds) {
-    partition = createPartition(model, nfolds = nfolds, column = cv.level)
-    predsCV = computePredictedValues(model, partition = partition, nParallel = 1)
-    saveRDS(predsCV, file = paste0("preds_fold_", fold, ".rds"))  # Save to disk
-    rm(partition, predsCV)
-    gc()
-  }
+preds = computePredictedValues(model)
+MF = evaluateModelFit(hM = model, predY = preds)
+# partition = createPartition(model, nfolds = nfolds, column = cv.level)
+# predsCV = computePredictedValues(model,
+#                                  partition = partition,
+#                                  nParallel = nParallel
+#                                  )
+# MFCV = evaluateModelFit(hM = model, predY = predsCV)
+WAIC = computeWAIC(model)
   
-  MFCV = evaluateModelFit(hM = model, predY = predsCV)
-  WAIC = computeWAIC(model)
-  
-  save(MF, 
-       MFCV, 
-       WAIC, file = "results/ENV_500_complete.Rdata")
-# }
+save(MF, 
+     # MFCV, 
+     WAIC, file = "results/SPACE_500.Rdata")
