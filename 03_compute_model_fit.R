@@ -20,7 +20,7 @@ rm(m_SPACE_500)
 thin = 1
 samples = 500
 nChains = 4
-nfolds = NULL # Default: two-fold cross-validation
+nfolds = 1 # Default: two-fold cross-validation
 # cv.level = "year"
 nParallel = 1 # Default: nParallel = nChains
  
