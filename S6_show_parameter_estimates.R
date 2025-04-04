@@ -14,7 +14,7 @@
 set.seed(13)
 
 localDir = "."
-modelDir = file.path(localDir, "model")
+modelDir = file.path(localDir, "models")
 resultDir = file.path(localDir, "results")
 
 
@@ -93,13 +93,13 @@ thin_list = 1
 nst = length(thin_list)
 nChains = 4
 
-text.file = file.path(resultDir,"/parameter_estimates.txt")
+text.file = file.path(resultDir,"/SPACE_parameter_estimates.txt")
 cat(c("This file contains additional information regarding parameter estimates.","\n","\n",sep=""),file=text.file)
 
-filename = "model/m_FULL_500.Rdata" # EDIT HERE ###############
+filename = "models/m_SPACE_500.Rdata" # EDIT HERE ###############
 load(filename)
-model <- m_FULL_500
-rm(m_FULL_500)
+model <- m_SPACE_500
+rm(m_SPACE_500)
 
 # Append filename to text file
 cat(c("\n", filename, "\n", "\n"), file = text.file, sep = "", append = TRUE)
@@ -114,7 +114,7 @@ omega.order = list(0)
 modelnames = "space"
 
 # Open a PDF for plots
-pdf(file = file.path(resultDir, "FULL_parameter_estimates.pdf"))
+pdf(file = file.path(resultDir, "SPACE_parameter_estimates.pdf"))
 
 
 m = model
@@ -138,23 +138,23 @@ MF = evaluateModelFit(hM = m, predY = preds)
 R2 = MF$R2
 
 # Save results to CSV
-filename = file.path(resultDir, paste("FULL_parameter_estimates_VP_", ".csv", sep = ""))
+filename = file.path(resultDir, paste("SPACE_parameter_estimates_VP_", ".csv", sep = ""))
 write.csv(vals, file = filename)
 
 # Save R2T Beta if available
 if (!is.null(VP$R2T$Beta)) {
-  filename = file.path(resultDir, paste("FULL_parameter_estimates_VP_R2T_Beta", modelnames[model_index], ".csv", sep = ""))
+  filename = file.path(resultDir, paste("SPACE_parameter_estimates_VP_R2T_Beta", modelnames[model_index], ".csv", sep = ""))
   write.csv(VP$R2T$Beta, file = filename)
 }
 
 # Save R2T Y if available
 if (!is.null(VP$R2T$Y)) {
-  filename = file.path(resultDir, paste("FULL_parameter_estimates_VP_R2T_Y", modelnames[model_index], ".csv", sep = ""))
+  filename = file.path(resultDir, paste("SPACE_parameter_estimates_VP_R2T_Y", modelnames[model_index], ".csv", sep = ""))
   write.csv(VP$R2T$Y, file = filename)
 }
 
 # Plot variance partitioning
-plotVariancePartitioning(hM = m, VP = VP, main = paste0("FULL_Proportion of explained variance, ", modelnames[model_index]))
+plotVariancePartitioning(hM = m, VP = VP, main = paste0("SPACE_Proportion of explained variance, ", modelnames[model_index]))
 
 # Close PDF output
 dev.off()
