@@ -12,10 +12,10 @@ set.seed(13)
 
 # --- SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE --- ####
 
-filename = "models/m_SPACE_500.RData"
+filename = "models/m_ENV_500.RData"
 load(filename)
-model <- m_SPACE_500 # EDIT
-rm(m_SPACE_500)
+model <- m_ENV_500 # EDIT
+rm(m_ENV_500)
 
 thin = 1
 samples = 500
@@ -40,4 +40,4 @@ WAIC = computeWAIC(model)
   
 save(MF, 
      MFCV, 
-     WAIC, file = "results/model_fit_SPACE_500.Rdata")
+     WAIC, file = "results/model_fit_ENV_500.Rdata")
