@@ -12,17 +12,17 @@ set.seed(13)
 
 # --- SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE --- ####
 
-filename = "models/m_ENV_500.RData"
+filename = "models/m_ENV_1000.RData"
 load(filename)
-model <- m_ENV_500 # EDIT
-rm(m_ENV_500)
+model <- m_ENV_1000 # EDIT
+rm(m_ENV_1000)
 
 thin = 1
-samples = 500
+samples = 1000
 nChains = 4
 nfolds = 1 # Default: two-fold cross-validation
 # cv.level = "year"
-nParallel = 1 # Default: nParallel = nChains
+nParallel = 12 # Default: nParallel = nChains
  
 
 preds = computePredictedValues(model)
@@ -40,4 +40,4 @@ WAIC = computeWAIC(model)
   
 save(MF, 
      MFCV, 
-     WAIC, file = "results/model_fit_ENV_500.Rdata")
+     WAIC, file = "results/model_fit_ENV_1000.Rdata")
