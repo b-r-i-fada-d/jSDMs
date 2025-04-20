@@ -244,10 +244,10 @@ nParallel = 1 # default: nParallel = nChains
 # load(file=file.path(modelDir,"unfitted_models.RData"))
 nm = length(models)
 
-samples_list = 1100
+samples_list = 500
 thin_list = 1
 nChains = 4
-transient = 100
+transient = 50
 
 if(is.null(nParallel)) nParallel = nChains
 Lst = 1
