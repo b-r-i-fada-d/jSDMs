@@ -144,14 +144,14 @@ m_ENV = Hmsc(Y = Y, XData = XData, XFormula = XFormula,
 
 # --- Test that models fit without errors & save --- ####
 
-m_FULL_test = sampleMcmc(m_FULL, samples = 2)
-m_SPACE_test = sampleMcmc(m_SPACE, samples = 2)
-m_ENV_test = sampleMcmc(m_ENV, samples = 2)
-
-
-save(m_FULL_test, file = file.path(modelDir, "m_FULL_test_unfitted_model.RData"))
-save(m_SPACE_test, file = file.path(modelDir, "m_SPACE_test_unfitted_model.RData"))
-save(m_ENV_test, file = file.path(modelDir, "m_ENV_test_unfitted_model.RData"))
+# m_FULL_test = sampleMcmc(m_FULL, samples = 2)
+# m_SPACE_test = sampleMcmc(m_SPACE, samples = 2)
+# m_ENV_test = sampleMcmc(m_ENV, samples = 2)
+# 
+# 
+# save(m_FULL_test, file = file.path(modelDir, "m_FULL_test_unfitted_model.RData"))
+# save(m_SPACE_test, file = file.path(modelDir, "m_SPACE_test_unfitted_model.RData"))
+# save(m_ENV_test, file = file.path(modelDir, "m_ENV_test_unfitted_model.RData"))
 
 # all good!
 
@@ -182,33 +182,33 @@ save(m_ENV_test, file = file.path(modelDir, "m_ENV_test_unfitted_model.RData"))
 # You may then leave the remaining part of the loop (e.g. thin = 10, 100, 1000) to run e.g. overnight
 
 nChains = 4
-nParallel = 2 # optional setting of nParallel
-samples = 1100
+nParallel = 4 # optional setting of nParallel
+samples = 800
 thin = 1
 transient = 100
 verbose = 1
 
-
-# Run environmental model
-m_ENV_1000 = sampleMcmc(m_ENV, thin = thin, samples = samples, transient = transient,
-                        nChains = nChains, initPar = "fixed effects",
-                        nParallel = nParallel, verbose = verbose)
-
-save(m_ENV_1000, file = file.path(modelDir, "m_ENV_1000_unfitted_model.RData"))
-
-# Run spatial model
-m_SPACE_1000 = sampleMcmc(m_SPACE, thin = thin, samples = samples, transient = transient,
-                        nChains = nChains, initPar = "fixed effects",
-                        nParallel = nParallel)
-
-save(m_SPACE_1000, file = file.path(modelDir, "m_SPACE_1000_unfitted_model.RData"))
+# 
+# # Run environmental model
+# m_ENV_800 = sampleMcmc(m_ENV, thin = thin, samples = samples, transient = transient,
+#                         nChains = nChains, initPar = "fixed effects",
+#                         nParallel = nParallel, verbose = verbose)
+# 
+# save(m_ENV_800, file = file.path(modelDir, "m_ENV_800_model.RData"))
+# 
+# # Run spatial model
+# m_SPACE_800 = sampleMcmc(m_SPACE, thin = thin, samples = samples, transient = transient,
+#                         nChains = nChains, initPar = "fixed effects",
+#                         nParallel = nParallel)
+# 
+# save(m_SPACE_800, file = file.path(modelDir, "m_SPACE_800_model.RData"))
 
 # Run full model
-m_FULL_1000 = sampleMcmc(m_FULL, thin = thin, samples = samples, transient = transient,
+m_FULL_800 = sampleMcmc(m_FULL, thin = thin, samples = samples, transient = transient,
                nChains = nChains, initPar = "fixed effects",
                nParallel = nParallel)
 
-save(m_FULL_1000, file = file.path(modelDir, "m_FULL_1000_unfitted_model.RData"))
+save(m_FULL_800, file = file.path(modelDir, "m_FULL_800_model.RData"))
 
 # MCMC convergence can be difficult to achieve especially in those models that are not based on normal distribution.
 # For this reason, in the script above we initialize model with
