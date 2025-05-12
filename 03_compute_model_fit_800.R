@@ -22,7 +22,7 @@ samples = 800
 nChains = 4
 nfolds = 1 # Default: two-fold cross-validation
 # cv.level = "year"
-nParallel = 12 # Default: nParallel = nChains
+nParallel = 1 # Default: nParallel = nChains
  
 
 preds = computePredictedValues(model)
