@@ -11,6 +11,8 @@ localDir = "."
 dataDir = file.path(localDir, "data")
 modelDir = file.path(localDir, "models")
 if(!dir.exists(modelDir)) dir.create(modelDir)
+resultDir = file.path(localDir, "results")
+if (!dir.exists(resultDir)) dir.create(resultDir)
 
 # make script reproducible
 set.seed(13)
