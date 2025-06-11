@@ -11,6 +11,8 @@ localDir = "."
 dataDir = file.path(localDir, "data")
 modelDir = file.path(localDir, "models")
 if(!dir.exists(modelDir)) dir.create(modelDir)
+resultDir = file.path(localDir, "results_june")
+if(!dir.exists(resultDir)) dir.create(resultDir)
 
 # make script reproducible
 set.seed(13)
@@ -44,15 +46,15 @@ nst = length(thin_list)
 nChains = 4
 Lst = 1
 
-text.file = file.path(resultDir,"/MCMC_convergence_SPACE_1000.txt") # EDIT
-cat("MCMC_Convergence_statistics_SPACE_1000\n\n",file=text.file,sep="") # EDIT
+text.file = file.path(resultDir,"/MCMC_convergence_no_sub_1000.txt") # EDIT
+cat("MCMC_Convergence_statistics_no_sub_1000\n\n",file=text.file,sep="") # EDIT
 
 # --- Evaluate convergence --- ####
 
 filename = "models/nosub_models_thin_1_samples_1000_chains_4.Rdata"
 load(filename)
-models <- m_SPACE_1000 # EDIT
-rm(m_SPACE_1000)
+models <- m_no_sub_1000 # EDIT
+rm(m_no_sub_1000)
 
 cat(c("\n",filename,"\n\n"),file=text.file,sep="",append=TRUE)
 nm = length(models)
@@ -125,7 +127,7 @@ if(showAlpha & nr>0){
 
   Lst = Lst + 1
 
-pdf(file= file.path(resultDir,"/MCMC_convergence_SPACE_1000.pdf")) # EDIT
+pdf(file= file.path(resultDir,"/MCMC_convergence_no_sub_1000.pdf")) # EDIT
 if(showBeta){
   par(mfrow=c(2,1))
   vioplot(ma.beta,col=rainbow_hcl(nm),names=na.beta,ylim=c(0,max(ma.beta)),main="psrf(beta)")
