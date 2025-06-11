@@ -7,7 +7,7 @@ library("ggplot2")
 # set directories
 localDir = "."
 dataDir = file.path(localDir, "data")
-modelDir = file.path(localDir, "models")
+modelDir = file.path(localDir, "models_june")
 if(!dir.exists(modelDir)) dir.create(modelDir)
 
 # make script reproducible
@@ -143,9 +143,9 @@ m_FULL_test = sampleMcmc(m_FULL, samples = 2)
 m_SPACE_test = sampleMcmc(m_SPACE, samples = 2)
 m_ENV_test = sampleMcmc(m_ENV, samples = 2)
 
-save(m_FULL_test, file = file.path(modelDir, "m_FULL_test_unfitted_model.RData"))
-save(m_SPACE_test, file = file.path(modelDir, "m_SPACE_test_unfitted_model.RData"))
-save(m_ENV_test, file = file.path(modelDir, "m_ENV_test_unfitted_model.RData"))
+# save(m_FULL_test, file = file.path(modelDir, "m_FULL_test_unfitted_model.RData"))
+# save(m_SPACE_test, file = file.path(modelDir, "m_SPACE_test_unfitted_model.RData"))
+# save(m_ENV_test, file = file.path(modelDir, "m_ENV_test_unfitted_model.RData"))
 
 # all good!
 
@@ -229,6 +229,9 @@ save(m_ENV_test, file = file.path(modelDir, "m_ENV_test_unfitted_model.RData"))
 #### --- Fit the models --- ####
 
 models = list(m_FULL, m_ENV, m_SPACE)
+names(models) = c("FULL_model", "ENV_model", "SPACE_model")
+save(models, file = file.path(modelDir, "unfitted_models.RData"))
+
 
 # SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE
 
