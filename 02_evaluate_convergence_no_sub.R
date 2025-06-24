@@ -9,7 +9,7 @@ library("ggplot2")
 # set directories
 localDir = "."
 dataDir = file.path(localDir, "data")
-modelDir = file.path(localDir, "models")
+modelDir = file.path(localDir, "models_june")
 if(!dir.exists(modelDir)) dir.create(modelDir)
 resultDir = file.path(localDir, "results_june")
 if(!dir.exists(resultDir)) dir.create(resultDir)
