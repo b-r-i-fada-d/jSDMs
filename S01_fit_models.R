@@ -12,6 +12,7 @@ source("argument_parser.R")
 library("Hmsc")
 library("tidyverse")
 library("ggplot2")
+library("jsonify")
 
 dir.create(arguments$output_dir)
 
