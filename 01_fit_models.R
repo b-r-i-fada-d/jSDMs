@@ -5,7 +5,7 @@ library("tidyverse")
 library("ggplot2")
 
 # set directories
-# setwd("C:/Users/boconnor/OneDrive - Marine Institute/Documents/Rwd/jSDMs/After_crash")
+setwd("C:/Users/boconnor/OneDrive - Marine Institute/Documents/Rwd/jSDMs/After_crash")
 localDir = "."
 dataDir = file.path(localDir, "data")
 modelDir = file.path(localDir, "models")

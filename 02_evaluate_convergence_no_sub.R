@@ -53,8 +53,8 @@ cat("MCMC_Convergence_statistics_no_sub_1000\n\n",file=text.file,sep="") # EDIT
 
 filename = "models/nosub_models_thin_1_samples_1000_chains_4.Rdata"
 load(filename)
-models <- nosub_models_thin_1_samples_1000_chains_4 # EDIT
-rm(nosub_models_thin_1_samples_1000_chains_4)
+# models <- nosub_models_thin_1_samples_1000_chains_4 # EDIT
+# rm(nosub_models_thin_1_samples_1000_chains_4)
 
 cat(c("\n",filename,"\n\n"),file=text.file,sep="",append=TRUE)
 nm = length(models)

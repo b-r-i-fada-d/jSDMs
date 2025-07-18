@@ -149,7 +149,10 @@ m_ENV_test = sampleMcmc(m_ENV, samples = 2)
 
 # all good!
 
-# --- Fitting model --- ####
+##############################################################################
+##############################################################################
+
+#### --- Fitting model --- ####
 
 # We will store 100 posterior samples for each of two chains
 # We note that for more "final" results, one might wish to have e.g. 1000 samples for each of four chains
@@ -175,37 +178,39 @@ m_ENV_test = sampleMcmc(m_ENV, samples = 2)
 # The idea is not to run the entire loop in one go, as that would take a lot of time. Just run thin = 1, and then move to develop the next scripts.
 # You may then leave the remaining part of the loop (e.g. thin = 10, 100, 1000) to run e.g. overnight
 # 
-# nChains = 4
-# nParallel = 2 # optional setting of nParallel
-# samples = 1100
-# thin = 1
-# transient = 100
-# 
-# 
-# # Run environmental model
-# m_ENV_1000 = sampleMcmc(m_ENV, thin = thin, samples = samples, transient = transient,
-#                         nChains = nChains, initPar = "fixed effects",
-#                         nParallel = nParallel, verbose = verbose)
-# 
-# save(m_ENV_1000, file = file.path(modelDir, "m_ENV_1000_model.RData"))
-# 
-# # Run spatial model
-# m_SPACE_1000 = sampleMcmc(m_SPACE, thin = thin, samples = samples, transient = transient,
-#                         nChains = nChains, initPar = "fixed effects",
-#                         nParallel = nParallel)
-# 
-# save(m_SPACE_1000, file = file.path(modelDir, "m_SPACE_1000_unfitted_model.RData"))
-# 
-# # Run full model
-# m_FULL_1000 = sampleMcmc(m_FULL, thin = thin, samples = samples, transient = transient,
-#                nChains = nChains, initPar = "fixed effects",
-#                nParallel = nParallel)
-# 
-# #### --- Test & save models --- ####
-# 
-# models = list(m, m.ENV, m.ENV2, m.SPACE)
-# names(models) = c("PA_model", "space_model", "env_model", "env2_model")
-# save(models, file = file.path(modelDir, "unfitted_models.RData"))
+nChains = 4
+nParallel = 1 # optional setting of nParallel
+samples = 1000
+thin = 1
+transient = 100
+
+
+# Run environmental model
+m_ENV_1000 = sampleMcmc(m_ENV, thin = thin, samples = samples, transient = transient,
+                        nChains = nChains, initPar = "fixed effects",
+                        nParallel = nParallel)
+
+save(m_ENV_1000, file = file.path(modelDir, "m_ENV_1000_model.RData"))
+
+# Run spatial model
+m_SPACE_1000 = sampleMcmc(m_SPACE, thin = thin, samples = samples, transient = transient,
+                        nChains = nChains, initPar = "fixed effects",
+                        nParallel = nParallel)
+
+save(m_SPACE_1000, file = file.path(modelDir, "m_SPACE_1000_unfitted_model.RData"))
+
+# Run full model
+m_FULL_1000 = sampleMcmc(m_FULL, thin = thin, samples = samples, transient = transient,
+               nChains = 1,
+               nParallel = nParallel)
+
+#### --- Save models --- ####
+
+models = list(m_FULL_1000, m_ENV_1000, m_SPACE_1000)
+names(models) = c("PA_model", "env_model", "space_model")
+save(models, file = file.path(modelDir, "nosub_models_thin_1_samples_1000_chains_4.RData"))
+
+
 # 
 # # --- Testing that model fits without errors
 # 
@@ -228,49 +233,49 @@ m_ENV_test = sampleMcmc(m_ENV, samples = 2)
 
 #### --- Fit the models --- ####
 
-models = list(m_FULL, m_ENV, m_SPACE)
-names(models) = c("FULL_model", "ENV_model", "SPACE_model")
-save(models, file = file.path(modelDir, "unfitted_models.RData"))
-
-
-# SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE
-
-nParallel = 1 # default: nParallel = nChains
-# nParallel = 1 # set to 1 to disable parallel computing
+# models = list(m_FULL, m_ENV, m_SPACE)
+# names(models) = c("FULL_model", "ENV_model", "SPACE_model")
+# save(models, file = file.path(modelDir, "unfitted_models.RData"))
 # 
-# load(file=file.path(modelDir,"unfitted_models.RData"))
-nm = length(models)
-
-samples_list = 1000
-thin_list = 1
-nChains = 4
-transient = 100
-
-if(is.null(nParallel)) nParallel = nChains
-Lst = 1
-while(Lst <= length(samples_list)){
-  thin = thin_list[Lst]
-  samples = samples_list[Lst]
-  print(paste0("thin = ",as.character(thin),"; samples = ",as.character(samples)))
-  filename = file.path(modelDir,paste("nosub_models_thin_", as.character(thin),
-                                      "_samples_", as.character(samples),
-                                      "_chains_",as.character(nChains),
-                                      ".Rdata",sep = ""))
-  if(file.exists(filename)){
-    print("model had been fitted already")
-  } else {
-    print(date())
-    for (mi in 1:nm) {
-      print(paste0("model = ",names(models)[mi]))
-      m = models[[mi]]
-      m = sampleMcmc(m, samples = samples, thin=thin,
-                     transient = transient,
-                     nChains = nChains,
-                     nParallel = nParallel) 
-      models[[mi]] = m
-    }
-    save(models, file=filename)
-  }
-  Lst = Lst + 1
-}
+# 
+# # SETTING COMMONLY ADJUSTED PARAMETERS TO NULL WHICH CORRESPONDS TO DEFAULT CHOICE
+# 
+# nParallel = 1 # default: nParallel = nChains
+# # nParallel = 1 # set to 1 to disable parallel computing
+# # 
+# # load(file=file.path(modelDir,"unfitted_models.RData"))
+# nm = length(models)
+# 
+# samples_list = 1000
+# thin_list = 1
+# nChains = 4
+# transient = 100
+# 
+# if(is.null(nParallel)) nParallel = nChains
+# Lst = 1
+# while(Lst <= length(samples_list)){
+#   thin = thin_list[Lst]
+#   samples = samples_list[Lst]
+#   print(paste0("thin = ",as.character(thin),"; samples = ",as.character(samples)))
+#   filename = file.path(modelDir,paste("nosub_models_thin_", as.character(thin),
+#                                       "_samples_", as.character(samples),
+#                                       "_chains_",as.character(nChains),
+#                                       ".Rdata",sep = ""))
+#   if(file.exists(filename)){
+#     print("model had been fitted already")
+#   } else {
+#     print(date())
+#     for (mi in 1:nm) {
+#       print(paste0("model = ",names(models)[mi]))
+#       m = models[[mi]]
+#       m = sampleMcmc(m, samples = samples, thin=thin,
+#                      transient = transient,
+#                      nChains = nChains,
+#                      nParallel = nParallel) 
+#       models[[mi]] = m
+#     }
+#     save(models, file=filename)
+#   }
+#   Lst = Lst + 1
+# }
 

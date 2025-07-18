@@ -195,19 +195,19 @@ pdf(file= file.path(resultDir,"/MCMC_convergence_800.pdf"))
 if(showBeta){
   par(mfrow=c(2,1))
   vioplot(ma.beta,col=rainbow_hcl(nm),names=na.beta,ylim=c(0,max(ma.beta)),main="psrf(beta)")
-  # legend("topright", legend = "FULL", fill=rainbow_hcl(nm))
+  legend("topright", legend = "FULL", fill=rainbow_hcl(nm))
   vioplot(ma.beta,col=rainbow_hcl(nm),names=na.beta,ylim=c(0.9,1.1),main="psrf(beta)")
 }
 if(showGamma){
   par(mfrow=c(2,1))
   vioplot(ma.gamma,col=rainbow_hcl(nm),names=na.gamma,ylim=c(0,max(ma.gamma)),main="psrf(gamma)")
-  # legend("topright",legend = "Null_1", fill=rainbow_hcl(nm))
+  legend("topright",legend = "Null_1", fill=rainbow_hcl(nm))
   vioplot(ma.gamma,col=rainbow_hcl(nm),names=na.gamma,ylim=c(0.9,1.1),main="psrf(gamma)")
 }
 if(showOmega & !is.null(ma.omega)){
   par(mfrow=c(2,1))
   vioplot(ma.omega,col=rainbow_hcl(nm),names=na.omega,ylim=c(0,max(ma.omega)),main="psrf(omega)")
-  # legend("topright",legend = "Null_2", fill=rainbow_hcl(nm))
+  legend("topright",legend = "Null_2", fill=rainbow_hcl(nm))
   vioplot(ma.omega,col=rainbow_hcl(nm),names=na.omega,ylim=c(0.9,1.1),main="psrf(omega)")
 }
 dev.off()

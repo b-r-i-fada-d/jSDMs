@@ -9,6 +9,10 @@
 #SBATCH --error=%x.%j.err
 
 source("argument_parser.R")
+
+parser <- build.s01.argparser()
+arguments <- parser$parse_args()
+
 library("Hmsc")
 library("tidyverse")
 library("ggplot2")
@@ -74,24 +78,24 @@ XFormula = ~ o2 + temp + ph + depth
 
 #### --- Construct the model --- ####
 
-if (arguments$model == "full"){
+if (arguments$model_type == "full"){
   model = Hmsc(Y = Y, XData = XData,
                XFormula = XFormula,
                distr = "probit", # because PA
                studyDesign = studyDesign,
                ranLevels = list(station = rL.station,
                                 year = rL.year))
-} else if (arguments$model == "environmental"){
+} else if (arguments$model_type == "environmental"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = XFormula,
                distr = "probit")
-} else if (arguments$model == "spatial"){
+} else if (arguments$model_type == "spatial"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = ~1, # this is the difference
                distr = "probit",
                studyDesign = studyDesign,
                ranLevels = list(year = rL.year))
-} else {stop(paste("unrecognised model type:", arguments$model))}
+} else {stop(paste("unrecognised model type:", arguments$model_type))}
 
 
 # Run model
@@ -104,5 +108,7 @@ sampler = sampleMcmc(model,
                      nChains = arguments$n_chains
                      )
 
-init_file_path = file.path(arguments$output_dir, arguments$model_rds)
+init_file_path = file.path(arguments$output_dir, arguments$sampler_rds)
 saveRDS(to_json(sampler), file = init_file_path)
+
+save(model, file = file.path(arguments$output_dir, arguments$model_rds))

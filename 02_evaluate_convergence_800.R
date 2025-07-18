@@ -5,6 +5,8 @@
 library("Hmsc")
 library("tidyverse")
 library("ggplot2")
+library("vioplot")
+library("colorspace")
 
 # set directories
 localDir = "."
@@ -45,6 +47,7 @@ thin_list = 1
 nst = length(thin_list)
 nChains = 4
 Lst = 1
+j = models
 
 text.file = file.path(resultDir,"/MCMC_convergence_FULL_800.txt") # EDIT
 cat("MCMC_Convergence_statistics_FULL_800\n\n",file=text.file,sep="") # EDIT
@@ -55,6 +58,24 @@ filename = "models/m_FULL_800.RData"
 load(filename)
 models <- m_FULL_800 # EDIT
 rm(m_FULL_800)
+
+
+mpost = convertToCodaObject(m, spNamesNumbers = c(T,F), covNamesNumbers = c(T,F))
+summary(mpost$Beta)
+psrf.beta = gelman.diag(mpost$Beta, multivariate=FALSE)$psrf
+tmp = mpost$Omega[[1]]
+z = ncol(tmp[[1]])
+sel = sample(z, size=200)
+# Here we take the subset of species pairs. We loop over the 2 MCMC chains.
+for(i in 1:length(tmp)){ 
+  tmp[[i]] = tmp[[i]][,sel]
+}
+psrf.omega = gelman.diag(tmp,multivariate=FALSE)$psrf
+
+par(mfrow=c(1,2))
+hist(psrf.beta, xlab = "psrf (beta)")
+hist(psrf.omega, xlab = "psrf (Omega)")
+
 
 cat(c("\n",filename,"\n\n"),file=text.file,sep="",append=TRUE)
 nm = length(models)
@@ -85,42 +106,43 @@ na.gamma = c(na.gamma,paste0(as.character(1),",",as.character(800))) # thin = 1;
         cat(psrf[1],file=text.file,sep="\n",append=TRUE)
       }
 
-      if(showOmega & nr>0){
-        cat("\nomega\n\n",file=text.file,sep="",append=TRUE)
-        for(k in 1:nr){
-          cat(c("\n",names(models$ranLevels)[k],"\n\n"),file=text.file,sep="",append=TRUE)
-          tmp = mpost$Omega[[k]]
-          z = dim(tmp[[1]])[2]
-          if(z > maxOmega){
-            sel = sample(1:z, size = maxOmega)
-            for(i in 1:length(tmp)){
-              tmp[[i]] = tmp[[i]][,sel]
-            }
-          }
-          psrf = gelman.diag(tmp, multivariate = FALSE)$psrf
-          tmp = summary(psrf)
-          cat(tmp[,1],file=text.file,sep="\n",append=TRUE)
-          if(is.null(ma.omega)){
-            ma.omega = psrf[,1]
-            na.omega = paste0(as.character(1),",",as.character(800)) # thin = 1; samples = 800
-          } else {
-            ma.omega = cbind(ma.omega,psrf[,1])
-            if(j==1){
-              na.omega = c(na.omega,paste0(as.character(1),",",as.character(800))) # thin = 1; samples = 800
-            } else {
-              na.omega = c(na.omega,"")
-            }
-          }
-        }
-      }
-      
+      # if(showOmega & nr>0){
+      #   cat("\nomega\n\n",file=text.file,sep="",append=TRUE)
+      #   for(k in 1:nr){
+      #     cat(c("\n",names(models$ranLevels)[k],"\n\n"),file=text.file,sep="",append=TRUE)
+      #     tmp = mpost$Omega[[k]]
+      #     z = dim(tmp[[1]])[2]
+      #     if(z > maxOmega){
+      #       sel = sample(1:z, size = maxOmega)
+      #       for(i in 1:length(tmp)){
+      #         tmp[[i]] = tmp[[i]][,sel]
+      #       }
+      #     }
+# 
+#           psrf = gelman.diag(tmp, multivariate = FALSE)$psrf
+#           tmp = summary(psrf)
+#           cat(tmp[,1],file=text.file,sep="\n",append=TRUE)
+#           if(is.null(ma.omega)){
+#             ma.omega = psrf[,1]
+#             na.omega = paste0(as.character(1),",",as.character(800)) # thin = 1; samples = 800
+#           } else {
+#             ma.omega = cbind(ma.omega,psrf[,1])
+#             if(j==1){
+#               na.omega = c(na.omega,paste0(as.character(1),",",as.character(800))) # thin = 1; samples = 800
+#             } else {
+#               na.omega = c(na.omega,"")
+#             }
+#           }
+#         }
+#       }
+
 if(showAlpha & nr>0){
         for(k in 1:nr){
           if(models$ranLevels[[k]]$sDim>0){
             cat("\nalpha\n\n",file=text.file,sep="\n",append=TRUE)
             cat(c("\n",names(models[[j]]$ranLevels)[k],"\n\n"),file=text.file,sep="",append=TRUE)
             psrf = gelman.diag(mpost$Alpha[[k]],multivariate = FALSE)$psrf
-            cat(psrf[,1],file=text.file,sep="\n",append=TRUE)            
+            cat(psrf[,1],file=text.file,sep="\n",append=TRUE)
           }
         }
       }
