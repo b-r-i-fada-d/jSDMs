@@ -90,11 +90,11 @@ prep_job=$(sbatch --parsable \
 		--model-rds "${model_rds}" \
 		--sampler-rds "${sampler_rds}" \
 		--output-dir "${output_dir}" \
+		--model-type "${model_type}" \
 		--n-samples "${n_samples}" \
 		--n-chains "${n_chains}" \
 		--n-thins "${n_thins}" \
 		--n-transients "${n_transients}" \
-		--model "${model_type}" \
 		--species-data "${species_data}" \
 		--env-data "${env_data}" \
 		--verbosity "${verbosity}"
@@ -112,4 +112,12 @@ run_job=$(sbatch --parsable --dependency=afterok:"${prep_job}" --array=1-"${n_ch
 	)
 
 # 3) Submit the R script to analyze the results. This will wait to run until the chains are all finished.
-sbatch --dependency=afterok:"${run_job}" hmsc-hpc.finalize.sh
+sbatch --dependency=afterok:"${run_job}" \
+	S02_post_hpc_processing.R \
+		--model-rds "${model_rds}" \
+		--output-dir "${output_dir}" \
+		--model-type "${model_type}" \
+		--n-samples "${n_samples}" \
+		--n-chains "${n_chains}" \
+		--n-thins "${n_thins}" \
+		--n-transients "${n_transients}"
