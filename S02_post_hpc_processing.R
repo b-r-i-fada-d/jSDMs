@@ -27,7 +27,7 @@ for(i in 0:(arguments$n_chains-1)){
   samples_list[[i+1]] = from_json(readRDS(file = chain_file)[[1]])[[1]]
 }
 
-model <- readRDS(file.path(arguments$output_dir, arguments$model_rds))
+model <- readRDS(file.path(arguments$model_rds))
 
 fitSepTF = importPosteriorFromHPC(model,
                                   samples_list, 
