@@ -3,7 +3,7 @@
 #SBATCH --jobname=HMSC-HPC.Prep
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=32G
-#SBATCH --time=00:15:00
+#SBATCH --time=01:00:00
 #SBATCH --partition=cpu
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -18,16 +18,16 @@ library("tidyverse")
 library("ggplot2")
 library("vioplot")
 library("colorspace")
+library("jsonify")
 
 samples_list = vector("list", arguments$n_chains) # empty list with slots
-for(i in 1:arguments$n_chains){
-  chain_file <- tools::file_path_sans_ext(arguments$model_rds)
-  chain_file <- paste0(chain_file, "_chain_", i, ".rds")
-  chain_file <- file.path(arguments$output_dir, chain_file)
-  samples_list[[i]] = from_json(readRDS(file = chain_file)[[1]])[[1]]
+for(i in 0:(arguments$n_chains-1)){
+  chain_file <- arguments$gibbs_samples_prefix
+  chain_file <- file.path(paste0(chain_file, "_chain_", i, ".rds"))
+  samples_list[[i+1]] = from_json(readRDS(file = chain_file)[[1]])[[1]]
 }
 
-model <- load(file.path(arguments$output_dir, arguments$model_rds))
+model <- readRDS(file.path(arguments$output_dir, arguments$model_rds))
 
 fitSepTF = importPosteriorFromHPC(model,
                                   samples_list, 
@@ -58,7 +58,7 @@ na.alpha = NULL
 ma.rho = NULL
 na.rho = NULL
 
-output_prefix <- tools::file_path_sans_ext(arguments$model_rds)
+output_prefix <- tools::file_path_sans_ext(basename(arguments$model_rds))
 convergence_file <- paste0(output_prefix, "_convergence.txt")
 convergence_file <- file.path(arguments$output_dir, convergence_file) 
 cat("MCMC_Convergence_statistics", file = convergence_file, sep = "")

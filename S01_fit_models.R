@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
-#SBATCH --jobname=HMSC-HPC.Prep
-#SBATCH --cpus-per-task=4
-#SBATCH --mem-per-cpu=32G
+#SBATCH --job-name=HMSC-HPC.Prep
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=1G
 #SBATCH --time=00:15:00
 #SBATCH --partition=cpu
 #SBATCH --output=%x.%j.out
@@ -111,4 +111,4 @@ sampler = sampleMcmc(model,
 init_file_path = file.path(arguments$output_dir, arguments$sampler_rds)
 saveRDS(to_json(sampler), file = init_file_path)
 
-save(model, file = file.path(arguments$output_dir, arguments$model_rds))
+saveRDS(model, file = file.path(arguments$output_dir, arguments$model_rds))
