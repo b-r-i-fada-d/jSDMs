@@ -29,14 +29,14 @@ for(i in 0:(arguments$n_chains-1)){
 
 model <- readRDS(file.path(arguments$model_rds))
 
-fitSepTF = importPosteriorFromHPC(model,
+model = importPosteriorFromHPC(model,
                                   samples_list, 
                                   arguments$n_samples, 
                                   arguments$n_thins, 
                                   arguments$n_transients)
 
-plotVariancePartitioning(fitSepTF, 
-                         computeVariancePartitioning(fitSepTF), 
+plotVariancePartitioning(model, 
+                         computeVariancePartitioning(model), 
                          args.legend=list(x="bottomright"))
 
 #### --- EVALUATE CONVERGENCE --- ####
