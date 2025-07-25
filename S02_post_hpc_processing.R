@@ -23,8 +23,9 @@ library("jsonify")
 samples_list = vector("list", arguments$n_chains) # empty list with slots
 for(i in 0:(arguments$n_chains-1)){
   chain_file <- arguments$gibbs_samples_prefix
-  chain_file <- file.path(paste0(chain_file, "_chain_", i, ".rds"))
-  samples_list[[i+1]] = from_json(readRDS(file = chain_file)[[1]])[[1]]
+  chain_file <- file.path(paste0(chain_file, "_chain_", i, ".json.gz"))
+  gz_file <- gzfile(chain_file, "rt")
+  samples_list[[i+1]] = from_json(gz_file)[[1]]
 }
 
 model <- readRDS(file.path(arguments$model_rds))
