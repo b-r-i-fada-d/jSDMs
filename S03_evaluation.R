@@ -8,9 +8,18 @@
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
+library("Hmsc")
+library("tidyverse")
+library("ggplot2")
+library("vioplot")
+library("colorspace")
+library("jsonlite")
+
+
 #### --- EVALUATE CONVERGENCE --- ####
 
 showBeta = TRUE
+
 showGamma = TRUE 
 showOmega = TRUE 
 showRho = TRUE 
