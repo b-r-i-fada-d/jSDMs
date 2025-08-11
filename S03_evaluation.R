@@ -1,4 +1,12 @@
+#!/usr/bin/env Rscript
 
+#SBATCH --job-name=HMSC-HPC.Post
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=32G
+#SBATCH --time=01:00:00
+#SBATCH --partition=cpu
+#SBATCH --output=%x.%j.out
+#SBATCH --error=%x.%j.err
 
 #### --- EVALUATE CONVERGENCE --- ####
 
@@ -370,4 +378,3 @@ if(model$nr > 0 && model$ns > 1) {
 }
 
 dev.off()
-
