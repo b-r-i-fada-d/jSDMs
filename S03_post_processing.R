@@ -24,8 +24,9 @@ library("jsonify")
 #### --- COMPUTE MODEL FIT --- #####
 
 model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
+output_prefix <- "model"
 
-preds = computePredictedValues(outputdir$model)
+preds = computePredictedValues(model)
 MF = evaluateModelFit(hM = model, predY = preds)
 partition = createPartition(model,
                             nfolds = 5)
