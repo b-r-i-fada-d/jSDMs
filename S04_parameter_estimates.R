@@ -99,9 +99,9 @@ if(model$nr + length(covariates) > 1 && model$ns > 1) {
   
   VP$vals <- VP$vals[, spOrderExplained]
   cat("\nvar.part.order.explained\n\n", 
-      file = text.file, append = TRUE)
+      file = parameter_file_path, append = TRUE)
   cat(model$spNames[spOrderExplained], 
-      file = text.file, sep = "\n", append = TRUE)
+      file = parameter_file_path, sep = "\n", append = TRUE)
   plotVariancePartitioning(hM = model, VP = VP, main = "Proportion of explained variance", cex.main = 0.8, cols = mycols)
   
   # Raw variance
@@ -120,9 +120,9 @@ if(model$nr + length(covariates) > 1 && model$ns > 1) {
     }
     VPr$vals <- VPr$vals[, spOrderRaw]
     cat("\nvar.part.order.raw\n\n", 
-        file = text.file, append = TRUE)
+        file = parameter_file_path, append = TRUE)
     cat(model$spNames[spOrderRaw], 
-        file = text.file, sep = "\n", append = TRUE)
+        file = parameter_file_path, sep = "\n", append = TRUE)
     plotVariancePartitioning(hM = model, VP = VPr, main = "Proportion of raw variance", cex.main = 0.8, cols = mycols, ylim = c(0, 1))
   }
 }
@@ -193,8 +193,8 @@ if(model$nr > 0 && model$ns > 1) {
       omega.order
     }
     
-    cat("\nomega.order\n\n", file = text.file, append = TRUE)
-    cat(model$spNames[plotOrder], file = text.file, sep = "\n", append = TRUE)
+    cat("\nomega.order\n\n", file = parameter_file_path, append = TRUE)
+    cat(model$spNames[plotOrder], file = parameter_file_path, sep = "\n", append = TRUE)
     
     mymain <- paste0("Associations: ", names(model$ranLevels)[r])
     if(model$ranLevels[[r]]$sDim > 0) {
