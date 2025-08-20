@@ -114,7 +114,7 @@ sampler = sampleMcmc(model,
                      nChains = arguments$n_chains
                      )
 
-init_file_path = file.path(arguments$output_dir, arguments$sampler_rds)
+init_file_path = file.path(arguments$output_dir, arguments$gibbs_samples_prefix)
 saveRDS(to_json(sampler), file = init_file_path)
 
 saveRDS(model, file = file.path(arguments$output_dir, arguments$model_rds))
