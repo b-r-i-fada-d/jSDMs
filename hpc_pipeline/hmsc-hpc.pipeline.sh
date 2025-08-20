@@ -29,7 +29,7 @@ help () {
 
 verbosity=0
 
-while getopts ":i:g:o:m:c:s:t:r:f:e:v:h" arg; do
+while getopts ":i:g:o:m:c:s:t:r:p:f:e:v:h" arg; do
 	case "${arg}" in
 		i)
 			model_rds="${OPTARG}"
@@ -60,6 +60,9 @@ while getopts ":i:g:o:m:c:s:t:r:f:e:v:h" arg; do
 			;;
 		e)
 			env_data="${OPTARG}"
+			;;
+		p)
+			pa_data="${OPTARG}"
 			;;
 		v)
 			verbosity="${OPTARG}"
@@ -97,6 +100,7 @@ prep_job=$(sbatch --parsable \
 		--n-transients "${n_transients}" \
 		--species-data "${species_data}" \
 		--env-data "${env_data}" \
+		--pa-data "${pa_data}" \
 		--verbosity "${verbosity}"
 	)
 
