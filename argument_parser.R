@@ -3,7 +3,7 @@ library("argparse")
 build.s01.argparser <- function(){
   parser <- ArgumentParser(description='HMSC-HPC Pipeline')
   parser$add_argument("-i", "--model-rds", type = "character", required=TRUE)
-  parser$add_argument("-g", "--sampler-rds", type = "character", required=TRUE)
+  parser$add_argument("-g", "--gibbs-samples-prefix", type = "character", required=TRUE)
   parser$add_argument("-o", "--output-dir", type = "character", required=TRUE)
   parser$add_argument("-m", "--model-type", type = "character", required=TRUE)
   
