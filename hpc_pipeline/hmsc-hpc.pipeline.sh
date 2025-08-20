@@ -91,7 +91,7 @@ if [ ${OPTIND} -eq 1 ]; then help; exit 0; fi
 prep_job=$(sbatch --parsable \
 	S01_fit_models.R \
 		--model-rds "${model_rds}" \
-		--sampler-rds "${sampler_rds}" \
+		--gibbs-samples-prefix "${sampler_rds}" \
 		--output-dir "${output_dir}" \
 		--model-type "${model_type}" \
 		--n-samples "${n_samples}" \
@@ -103,9 +103,9 @@ prep_job=$(sbatch --parsable \
 		--pa-data "${pa_data}" \
 		--verbosity "${verbosity}"
 	)
-
+njobs=$((n_chains-1))
 # 2) Submit a job for each python sampling chain. These will wait to run until the prep script finishes.
-run_job=$(sbatch --parsable --dependency=afterok:"${prep_job}" --array=1-"${n_chains}" \
+run_job=$(sbatch --parsable --dependency=afterok:"${prep_job}" --array=0-"${njobs}" \
 	hmsc-hpc.run.sh \
 		-g "${output_dir}/${sampler_rds}" \
 		-o "${output_dir}" \
