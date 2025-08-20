@@ -20,18 +20,22 @@ library("jsonify")
 
 dir.create(arguments$output_dir)
 
-# make df with unique station numbers, species PA, & env params
-species <- read_csv(arguments$species_data)
-env <- read_csv(arguments$env_data)
-
-# match up
-env <- env %>% select(-Station)
-species <- species %>% mutate(lat = round(lat, 4), lon = round(lon, 4))
-
-df <- left_join(species, env, by = c("lat", "lon", "Year", "Month"))
-df <- df %>% drop_na()
-
-rm(species, env)
+if(is.null(arguments$pa_data)) {
+  # make df with unique station numbers, species PA, & env params
+  species <- read_csv(arguments$species_data)
+  env <- read_csv(arguments$env_data)
+  
+  # match up
+  env <- env %>% select(-Station)
+  species <- species %>% mutate(lat = round(lat, 4), lon = round(lon, 4))
+  
+  df <- left_join(species, env, by = c("lat", "lon", "Year", "Month"))
+  df <- df %>% drop_na()
+  
+  rm(species, env)
+} else {
+  df <- read_csv(arguments$pa_data)
+}
 
 
 #### --- Prep the model --- ####
@@ -39,21 +43,22 @@ rm(species, env)
 # --- Select species data
 
 Y <- df %>%
-  dplyr::select(6:162) # just species columns
+  dplyr::select(11:207) # just species columns
 Y = as.matrix(Y)
 
 # --- Select environmental data
 
-XData = data.frame(station = as.factor(df$Station), 
+XData = data.frame(station = as.factor(df$station), 
                    year = as.factor(df$Year), month = as.factor(df$Month),
-                   o2 = df$o2, temp = df$temp,
-                   ph = df$ph, depth = df$depth)
+                   o2 = df$BO_dissox, temp = df$BO2_templtmax_bdmean,
+                   ph = df$BO_ph, depth = df$BO_bathymean,
+                   sal = df$BO_salinity)
 
 
 # --- Coordinate data
 
 xy = as.matrix(cbind(df$lon, df$lat))
-rownames(xy) = as.character(df$Station)
+rownames(xy) = as.character(df$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 xy <- unique(xy)
 
@@ -73,8 +78,7 @@ rL.station = HmscRandomLevel(units = levels(studyDesign$station))
 
 # --- Regression model for environmental covariates
 
-XFormula = ~ o2 + temp + ph + depth
-
+XFormula = ~ o2 + temp + ph + depth + sal
 
 #### --- Construct the model --- ####
 

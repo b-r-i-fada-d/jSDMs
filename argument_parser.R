@@ -12,8 +12,9 @@ build.s01.argparser <- function(){
   parser$add_argument("-t", "--n-thins", type = "integer", required=TRUE)
   parser$add_argument("-r", "--n-transients", type = "integer", required=TRUE)
   
-  parser$add_argument("-f", "--species-data", type = "character", required=TRUE)
-  parser$add_argument("-e", "--env-data", type = "character", required=TRUE)
+  parser$add_argument("-f", "--species-data", type = "character", required=FALSE)
+  parser$add_argument("-e", "--env-data", type = "character", required=FALSE)
+  parser$add_argument("-p", "--pa-data", type = "character", required=FALSE)
   
   # parser$add_argument("-x", "--seed", type = "integer", required=FALSE)
   parser$add_argument("-v", "--verbosity", type = "integer", required=FALSE)
