@@ -37,6 +37,8 @@ if(is.null(arguments$pa_data)) {
   df <- read_csv(arguments$pa_data)
 }
 
+df <- df %>% drop_na()
+
 
 #### --- Prep the model --- ####
 
