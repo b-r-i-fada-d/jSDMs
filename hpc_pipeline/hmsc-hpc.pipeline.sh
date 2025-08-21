@@ -118,6 +118,7 @@ run_job=$(sbatch --parsable --dependency=afterok:"${prep_job}" --array=0-"${njob
 # 3) Submit the R script to analyze the results. This will wait to run until the chains are all finished.
 sbatch --dependency=afterok:"${run_job}" \
 	S02_post_hpc_processing.R \
+		--gibbs-samples-prefix "${sampler_rds}" \
 		--model-rds "${model_rds}" \
 		--output-dir "${output_dir}" \
 		--model-type "${model_type}" \
