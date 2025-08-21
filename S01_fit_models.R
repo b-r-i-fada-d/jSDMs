@@ -106,7 +106,7 @@ if (arguments$model_type == "full"){
 
 # Run model
 sampler = sampleMcmc(model,
-                     initPar = "fixed effects",
+                     # initPar = "fixed effects",
                      engine="HPC",
                      thin = arguments$n_thins, 
                      samples = arguments$n_samples, 
