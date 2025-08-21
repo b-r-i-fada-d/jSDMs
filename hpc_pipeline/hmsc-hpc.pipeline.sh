@@ -88,7 +88,7 @@ if [ ${OPTIND} -eq 1 ]; then help; exit 0; fi
 
 
 # 1) Submit the R script that prepares the model.
-prep_job=$(sbatch --parsable \
+prep_job=$(sbatch -A p200950 -q default --parsable \
 	S01_fit_models.R \
 		--model-rds "${model_rds}" \
 		--gibbs-samples-prefix "${sampler_rds}" \
@@ -105,7 +105,7 @@ prep_job=$(sbatch --parsable \
 	)
 njobs=$((n_chains-1))
 # 2) Submit a job for each python sampling chain. These will wait to run until the prep script finishes.
-run_job=$(sbatch --parsable --dependency=afterok:"${prep_job}" --array=0-"${njobs}" \
+run_job=$(sbatch -A p200950 -q default --parsable --dependency=afterok:"${prep_job}" --array=0-"${njobs}" \
 	hmsc-hpc.run.sh \
 		-g "${output_dir}/${sampler_rds}" \
 		-o "${output_dir}" \
@@ -116,7 +116,7 @@ run_job=$(sbatch --parsable --dependency=afterok:"${prep_job}" --array=0-"${njob
 	)
 
 # 3) Submit the R script to analyze the results. This will wait to run until the chains are all finished.
-sbatch --dependency=afterok:"${run_job}" \
+sbatch -A p200950 -q default --dependency=afterok:"${run_job}" \
 	S02_post_hpc_processing.R \
 		--gibbs-samples-prefix "${sampler_rds}" \
 		--model-rds "${model_rds}" \
