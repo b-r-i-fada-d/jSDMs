@@ -102,8 +102,7 @@ if (arguments$model_type == "full"){
                XFormula = ~1, # this is the difference
                distr = "probit",
                studyDesign = studyDesign #,
-           #    ranLevels = list(year = rL.year
-           )
+           #    ranLevels = list(year = rL.year)
            )
 } else {stop(paste("unrecognised model type:", arguments$model_type))}
 
