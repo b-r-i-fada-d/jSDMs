@@ -3,7 +3,7 @@
 #SBATCH --job-name=HMSC-HPC.Post
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=32G
-#SBATCH --time=03:00:00
+#SBATCH --time=00:30:00
 #SBATCH --partition=cpu
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -160,7 +160,7 @@ if(!is.null(model$phyloTree)) {
   mymain <- paste0(mymain, ", E[rho] = ", round(mean(rhovals), 2), ", Pr[rho>0] = ", round(mean(rhovals > 0), 2))
 }
 title(main = mymain, line = 2.5, cex.main = 0.8)
-}
+
 
 # --- GAMMA PLOTS --- #
 
