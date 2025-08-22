@@ -19,7 +19,6 @@ library("tidyverse")
 library("ggplot2")
 library("vioplot")
 library("colorspace")
-library("jsonify")
 
 #### --- COMPUTE MODEL FIT --- #####
 
@@ -29,7 +28,7 @@ output_prefix <- "model"
 preds = computePredictedValues(model)
 MF = evaluateModelFit(hM = model, predY = preds)
 partition = createPartition(model,
-                            nfolds = 5)
+                            nfolds = 2)
 
 predsCV = computePredictedValues(model,
                                  partition = partition,
@@ -53,7 +52,7 @@ pdf(file = fits_plots_path)
 if(!is.null(MF$TjurR2)) {
   plot(MF$TjurR2, MFCV$TjurR2, xlim = c(-1, 1), ylim = c(-1, 1),
        xlab = "Explanatory Power", ylab = "Predictive Power",
-       main = paste0(model_label, ": Tjur R2\n",
+       main = paste0(output_prefix, ": Tjur R2\n",
                      "Mean(MF) = ", round(mean(MF$TjurR2, na.rm = TRUE), 3),
                      ", Mean(MFCV) = ", round(mean(MFCV$TjurR2, na.rm = TRUE), 3)))
   abline(0, 1); abline(v = 0); abline(h = 0)
@@ -62,7 +61,7 @@ if(!is.null(MF$TjurR2)) {
 if(!is.null(MF$R2)) {
   plot(MF$R2, MFCV$R2, xlim = c(-1, 1), ylim = c(-1, 1),
        xlab = "Explanatory Power", ylab = "Predictive Power",
-       main = paste0(model_label, ": R2\n",
+       main = paste0(output_prefix, ": R2\n",
                      "Mean(MF) = ", round(mean(MF$R2, na.rm = TRUE), 3),
                      ", Mean(MFCV) = ", round(mean(MFCV$R2, na.rm = TRUE), 3)))
   abline(0, 1); abline(v = 0); abline(h = 0)
@@ -71,7 +70,7 @@ if(!is.null(MF$R2)) {
 if(!is.null(MF$AUC)) {
   plot(MF$AUC, MFCV$AUC, xlim = c(0, 1), ylim = c(0, 1),
        xlab = "Explanatory Power", ylab = "Predictive Power",
-       main = paste0(model_label, ": AUC\n",
+       main = paste0(output_prefix, ": AUC\n",
                      "Mean(MF) = ", round(mean(MF$AUC, na.rm = TRUE), 3),
                      ", Mean(MFCV) = ", round(mean(MFCV$AUC, na.rm = TRUE), 3)))
   abline(0, 1); abline(v = 0.5); abline(h = 0.5)
@@ -80,7 +79,7 @@ if(!is.null(MF$AUC)) {
 if(!is.null(MF$SR2)) {
   plot(MF$SR2, MFCV$SR2, xlim = c(-1, 1), ylim = c(-1, 1),
        xlab = "Explanatory Power", ylab = "Predictive Power",
-       main = paste0(model_label, ": SR2\n",
+       main = paste0(output_prefix, ": SR2\n",
                      "Mean(MF) = ", round(mean(MF$SR2, na.rm = TRUE), 3),
                      ", Mean(MFCV) = ", round(mean(MFCV$SR2, na.rm = TRUE), 3)))
   abline(0, 1); abline(v = 0); abline(h = 0)
@@ -224,7 +223,6 @@ if(!is.null(model$phyloTree)) {
   mymain <- paste0(mymain, ", E[rho] = ", round(mean(rhovals), 2), ", Pr[rho>0] = ", round(mean(rhovals > 0), 2))
 }
 title(main = mymain, line = 2.5, cex.main = 0.8)
-}
 
 # --- GAMMA PLOTS --- #
 
