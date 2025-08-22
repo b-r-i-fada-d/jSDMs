@@ -9,7 +9,7 @@
 #SBATCH --error=%x.%j.err
 
 source("argument_parser.R")
-parser <- build.s02.argparser()
+parser <- build.s03.argparser()
 arguments <- parser$parse_args()
 
 library(Hmsc)
