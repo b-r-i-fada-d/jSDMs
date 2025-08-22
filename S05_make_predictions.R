@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1G
 #SBATCH --time=01:00:00
-#SBATCH --partition=cpu
+#SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
