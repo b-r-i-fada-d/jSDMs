@@ -17,7 +17,7 @@ library(tidyverse)
 library(ggplot2)
 
 # Read environmental data
-grid <- read_csv(arguments$PA_data)
+grid <- read_csv(arguments$pa_data)
 
 grid <- grid %>% select(-Year)
 
