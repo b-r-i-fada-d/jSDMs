@@ -18,6 +18,8 @@ library(ggplot2)
 
 # Read environmental data
 grid <- read_csv(arguments$pa_data)
+model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
+output_prefix <- "model"
 
 grid <- grid %>% select(-Year)
 
