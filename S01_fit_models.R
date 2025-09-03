@@ -51,11 +51,9 @@ Y = as.matrix(Y)
 # --- Select environmental data
 
 XData = data.frame(station = as.factor(df$station), 
-                   year = as.factor(df$Year), #month = as.factor(df$Month),
-                   o2 = df$BO_dissox, temp = df$BO2_templtmax_bdmean,
-                   ph = df$BO_ph, depth = df$BO_bathymean,
-                   sal = df$BO_salinity)
-
+                   year = as.factor(df$Year), month = as.factor(df$Month),
+                   o2 = df$o2, temp = df$temp,
+                   ph = df$ph, depth = df$depth)
 
 # --- Coordinate data
 
@@ -69,19 +67,20 @@ xy <- unique(xy)
 
 # --- Study design
 
-studyDesign = data.frame(station = XData$station#, year = XData$year
-                         )
-
+studyDesign <- data.frame(station = as.factor(df$station),
+                          lat = as.factor(df$lat),
+                          lon = as.factor(df$lon),
+                          year = as.factor(df$Year))
 
 # --- Random effect structure (hierarchical study design)
 
-#rL.year = HmscRandomLevel(units = levels(studyDesign$year))
-rL.station = HmscRandomLevel(units = levels(studyDesign$station))
+rL.xy <- HmscRandomLevel(sData = xy, sMethod = "NGGP")
+rL.year <- HmscRandomLevel(units = levels(studyDesign$year))
 
 
 # --- Regression model for environmental covariates
 
-XFormula = ~ o2 + temp + ph + depth + sal
+XFormula = ~ o2 + temp + ph + depth + month + year
 
 #### --- Construct the model --- ####
 
@@ -90,20 +89,23 @@ if (arguments$model_type == "full"){
                XFormula = XFormula,
                distr = "probit", # because PA
                studyDesign = studyDesign,
-               ranLevels = list(station = rL.station #,
-                           #     year = rL.year
+               ranLevels = list(station = rL.xy,
+                                year = rL.year
                                 ))
 } else if (arguments$model_type == "environmental"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = XFormula,
-               distr = "probit")
+               distr = "probit",
+               studyDesign = studyDesign,
+               ranLevels = list(year = rL.year
+                                ))
 } else if (arguments$model_type == "spatial"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = ~1, # this is the difference
                distr = "probit",
-               studyDesign = studyDesign #,
-           #    ranLevels = list(year = rL.year)
-           )
+               studyDesign = studyDesign,
+               ranLevels = list(station = rL.xy,
+                                year = rL.year))
 } else {stop(paste("unrecognised model type:", arguments$model_type))}
 
 
