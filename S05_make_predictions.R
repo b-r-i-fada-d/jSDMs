@@ -25,9 +25,9 @@ grid <- grid %>% select(-Year)
 
 # Coordinates and environmental predictors
 xy.grid <- as.matrix(cbind(grid$lon, grid$lat))
-XData.grid <- grid %>% select(temp = BO2_templtmax_bdmean, 
-                              o2 = BO_dissox, ph = BO_ph, 
-                              depth = BO_bathymean, sal = BO_salinity)
+XData.grid <- grid %>% select(temp = temp, 
+                              o2 = 02, ph = ph, 
+                              depth = depth)
 
 # # Prepare gradient (if model has spatial effects)
 # Gradient <- prepareGradient(model, XDataNew = XData.grid, sDataNew = list(station = xy.grid))
