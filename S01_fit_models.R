@@ -74,13 +74,13 @@ studyDesign <- data.frame(station = as.factor(df$station),
 
 # --- Random effect structure (hierarchical study design)
 
-rL.xy <- HmscRandomLevel(sData = xy, sMethod = "NGGP")
-#rL.year <- HmscRandomLevel(units = levels(studyDesign$year))
+rL.xy <- HmscRandomLevel(units = levels(studyDesign$station))
+rL.year <- HmscRandomLevel(units = levels(studyDesign$year))
 
 
 # --- Regression model for environmental covariates
 
-XFormula = ~ o2 + temp + ph + depth # + month + year
+XFormula = ~ o2 + temp + ph + depth + month + year
 
 #### --- Construct the model --- ####
 
@@ -89,7 +89,7 @@ if (arguments$model_type == "full"){
                XFormula = XFormula,
                distr = "probit", # because PA
                studyDesign = studyDesign,
-               ranLevels = list(station = rL.xy #, year = rL.year
+               ranLevels = list(station = rL.xy, year = rL.year
                                 ))
 } else if (arguments$model_type == "environmental"){
   model = Hmsc(Y = Y, XData = XData, 
