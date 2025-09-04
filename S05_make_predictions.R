@@ -17,7 +17,7 @@ library(tidyverse)
 library(ggplot2)
 
 # Read environmental data
-grid <- read_csv(arguments$pa_data)
+grid <- read_csv(arguments$env_data)
 model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
 output_prefix <- "model"
 
@@ -26,7 +26,7 @@ grid <- grid %>% select(-Year)
 # Coordinates and environmental predictors
 xy.grid <- as.matrix(cbind(grid$lon, grid$lat))
 XData.grid <- grid %>% select(temp = temp, 
-                              o2 = 02, ph = ph, 
+                              o2 = o2, ph = ph, 
                               depth = depth)
 
 # # Prepare gradient (if model has spatial effects)
