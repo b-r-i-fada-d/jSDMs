@@ -59,17 +59,17 @@ nParallel <- 2
 # save(EpredY, file = file.path("predictions.RData"))
 
 # new
-# # predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-# predY.grid <- predict(
-#   object = model,
-#   XData = XData.grid,
-#   studyDesign = studyDesign.grid,
-#   ranLevels = list(),
-#   predictEtaMean = TRUE,
-#   expected = TRUE
-# )
-# 
-# EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
-# 
-# 
-# save(EpredY.grid, file = "results/predictions_grid.RData")
+# predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+predY.grid <- predict(
+  object = model,
+  XData = XData.grid,
+  studyDesign = studyDesign.grid,
+  ranLevels = list(),
+  predictEtaMean = TRUE,
+  expected = TRUE
+)
+
+EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
+
+
+save(EpredY.grid, file = "results/predictions_grid.RData")
