@@ -31,13 +31,13 @@ grid <- grid %>% drop_na()
 #                               depth = depth)
 
 # new
-xy.grid = as.matrix(cbind(grid$lon,grid$lat))
-XData.grid <- data.frame(ph = grid$ph, 
-                         depth = grid$depth,
-                         o2 = grid$o2,
-                         temp = grid$temp,
-                         month = grid$Month,
-                         year = grid$Year,
+xy.grid = as.matrix(cbind(grid$lon, grid$lat))
+XData.grid <- data.frame(ph = as.factor(grid$ph), 
+                         depth = as.factor(grid$depth),
+                         o2 = as.factor(grid$o2),
+                         temp = as.factor(grid$temp),
+                         month = as.factor(grid$Month),
+                         year = as.factor(grid$Year),
                          stringsAsFactors = TRUE
 )
 
