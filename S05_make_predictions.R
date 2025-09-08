@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=HMSC-HPC.Prep
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=1G
-#SBATCH --time=01:00:00
+#SBATCH --mem-per-cpu=16G
+#SBATCH --time=20:00:00
 #SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
