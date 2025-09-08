@@ -21,81 +21,55 @@ grid <- read_csv(arguments$env_data)
 model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
 output_prefix <- "model"
 
-grid <- grid %>% select(-Year)
+grid <- grid %>% drop_na()
 
 # Coordinates and environmental predictors
-xy.grid <- as.matrix(cbind(grid$lon, grid$lat))
-XData.grid <- grid %>% select(temp = temp, 
-                              o2 = o2, ph = ph, 
-                              depth = depth)
+# old
+# xy.grid <- as.matrix(cbind(grid$lon, grid$lat))
+# XData.grid <- grid %>% select(temp = temp, 
+#                               o2 = o2, ph = ph, 
+#                               depth = depth)
+
+# new
+xy.grid = as.matrix(cbind(grid$lon,grid$lat))
+XData.grid <- data.frame(ph = grid$ph, 
+                         depth = grid$depth,
+                         o2 = grid$o2,
+                         temp = grid$temp,
+                         month = grid$Month,
+                         year = grid$Year,
+                         stringsAsFactors = TRUE
+)
+
+studyDesign.grid <- data.frame(
+  site = as.factor(1:nrow(XData.grid))
+)
 
 # # Prepare gradient (if model has spatial effects)
 # Gradient <- prepareGradient(model, XDataNew = XData.grid, sDataNew = list(station = xy.grid))
 
 # Posterior predictive distribution
 nParallel <- 2
-predY <- predict(model, expected = TRUE, nParallel = nParallel)
-EpredY <- Reduce("+", predY) / length(predY)
 
-# Save predictions
-save(EpredY, file = file.path("predictions.RData"))
+# old
+# predY <- predict(model, expected = TRUE, nParallel = nParallel)
+# EpredY <- Reduce("+", predY) / length(predY)
 # 
-# # Post-process predictions
-# DI <- EpredY[, 56]  # Example species
-# S  <- rowSums(EpredY)  # Species richness
-# CWM <- (EpredY %*% model$Tr) / matrix(rep(S, model$nt), ncol = model$nt)  # Community-weighted mean traits
-# 
-# # Prepare data frame for mapping
-# mapData <- data.frame(
-#   x = grid$lon,
-#   y = grid$lat,
-#   temp = XData.grid$temp,
-#   o2 = XData.grid$o2,
-#   ph = XData.grid$ph,
-#   depth = XData.grid$depth,
-#   DI = DI,
-#   S = S,
-#   CWM = CWM
+# # Save predictions
+# save(EpredY, file = file.path("predictions.RData"))
+
+# new
+# # predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+# predY.grid <- predict(
+#   object = model,
+#   XData = XData.grid,
+#   studyDesign = studyDesign.grid,
+#   ranLevels = list(),
+#   predictEtaMean = TRUE,
+#   expected = TRUE
 # )
 # 
-# # Example clustering
-# RCP10 <- kmeans(EpredY, 10)
-# mapData$RCP10.cluster <- as.factor(RCP10$cluster)
+# EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
 # 
-# # Create output folder for maps
-# dir.create("maps", showWarnings = FALSE)
 # 
-# # Function to save a ggplot automatically
-# save_plot <- function(plot_obj, filename) {
-#   ggsave(filename = file.path("maps", filename),
-#          plot = plot_obj, width = 6, height = 5, dpi = 300)
-# }
-# 
-# # List of plots to save
-# plots <- list(
-#   ggplot(mapData, aes(x = x, y = y, color = temp)) +
-#     geom_point(size = 1) + ggtitle("Temperature") + scale_color_gradient(low = "blue", high = "red") + coord_equal(),
-#   
-#   ggplot(mapData, aes(x = x, y = y, color = o2)) +
-#     geom_point(size = 1) + ggtitle("Oxygen") + scale_color_gradient(low = "blue", high = "red") + coord_equal(),
-#   
-#   ggplot(mapData, aes(x = x, y = y, color = DI)) +
-#     geom_point(size = 1) + ggtitle(expression(italic("Dipturus intermedius"))) + scale_color_gradient(low = "blue", high = "red") + coord_equal(),
-#   
-#   ggplot(mapData, aes(x = x, y = y, color = S)) +
-#     geom_point(size = 1) + ggtitle("Species richness") + scale_color_gradient(low = "blue", high = "red") + coord_equal(),
-#   
-#   ggplot(mapData, aes(x = x, y = y, color = CWM)) +
-#     geom_point(size = 1) + ggtitle("Community-weighted mean traits") + scale_color_gradient(low = "blue", high = "red") + coord_equal(),
-#   
-#   ggplot(mapData, aes(x = x, y = y, color = RCP10.cluster)) +
-#     geom_point(size = 1) + ggtitle("RCP10 clusters") + scale_color_discrete() + coord_equal()
-# )
-# 
-# # Filenames for saved plots
-# filenames <- c("map_temp.png", "map_o2.png", "map_DI.png", "map_richness.png", "map_CWM.png", "map_RCP10.png")
-# 
-# # Save all plots
-# for (i in seq_along(plots)) {
-#   save_plot(plots[[i]], filenames[i])
-# }
+# save(EpredY.grid, file = "results/predictions_grid.RData")
