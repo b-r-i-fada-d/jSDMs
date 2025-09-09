@@ -26,21 +26,21 @@ grid <- grid %>% drop_na()
 
 nParallel <- 4
 
-# new
-xy.grid = as.matrix(cbind(grid$lon, grid$lat))
-XData.grid <- data.frame(ph = as.factor(grid$ph), 
-                         depth = as.factor(grid$depth),
-                         o2 = as.factor(grid$o2),
-                         temp = as.factor(grid$temp),
-                         month = as.factor(grid$month),
-                         year = as.factor(grid$year),
-                         station = as.factor(grid$station),
-                         stringsAsFactors = TRUE
-)
-
-studyDesign.grid <- data.frame(
-  station = as.factor(1:nrow(XData.grid))
-)
+# # new
+# xy.grid = as.matrix(cbind(grid$lon, grid$lat))
+# XData.grid <- data.frame(ph = as.factor(grid$ph), 
+#                          depth = as.factor(grid$depth),
+#                          o2 = as.factor(grid$o2),
+#                          temp = as.factor(grid$temp),
+#                          month = as.factor(grid$month),
+#                          year = as.factor(grid$year),
+#                          station = as.factor(grid$station),
+#                          stringsAsFactors = TRUE
+# )
+# 
+# studyDesign.grid <- data.frame(
+#   station = as.factor(1:nrow(XData.grid))
+# )
 # 
 # # Batching 
 # batch_size <- 1000
@@ -105,24 +105,24 @@ studyDesign.grid <- data.frame(
 # Posterior predictive distribution
 
 # old
-# predY <- predict(model, expected = TRUE, nParallel = nParallel)
-# EpredY <- Reduce("+", predY) / length(predY)
-# 
-# # Save predictions
-# save(EpredY, file = file.path("predictions.RData"))
+predY <- predict(model, expected = TRUE, nParallel = nParallel)
+EpredY <- Reduce("+", predY) / length(predY)
+
+# Save predictions
+save(EpredY, file = file.path("predictions.RData"))
 
 # new
-#predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-predY.grid <- predict(
-  object = model,
-  XData = XData.grid,
-  studyDesign = studyDesign.grid,
-  # ranLevels = list(),
-  predictEtaMean = TRUE,
-  expected = TRUE
-)
-
-EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
+# #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+# predY.grid <- predict(
+#   object = model,
+#   XData = XData.grid,
+#   studyDesign = studyDesign.grid,
+#   # ranLevels = list(),
+#   predictEtaMean = TRUE,
+#   expected = TRUE
+# )
+# 
+# EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
 
 # 
 # save(EpredY.grid, file = "results/predictions_grid.RData")
