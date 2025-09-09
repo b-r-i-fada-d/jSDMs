@@ -106,10 +106,11 @@ nParallel <- 4
 
 # old
 predY <- predict(model, expected = TRUE, nParallel = nParallel)
-EpredY <- Reduce("+", predY) / length(predY)
+#EpredY <- Reduce("+", predY) / length(predY)
 
 # Save predictions
-save(EpredY, file = file.path("predictions.RData"))
+save(predY, file = file.path("predictions_raw"))
+#save(EpredY, file = file.path("predictions.RData"))
 
 # new
 # #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
