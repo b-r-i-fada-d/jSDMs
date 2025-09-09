@@ -38,7 +38,7 @@ XData.grid <- data.frame(ph = as.factor(grid$ph),
 )
 
 studyDesign.grid <- data.frame(
-  site = as.factor(1:nrow(XData.grid))
+  station = as.factor(1:nrow(XData.grid))
 )
 # 
 # # Batching 
