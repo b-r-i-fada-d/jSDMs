@@ -23,7 +23,7 @@ output_prefix <- "model"
 
 grid <- grid %>% drop_na()
 
-nParallel <- 2
+nParallel <- 4
 
 # new
 xy.grid = as.matrix(cbind(grid$lon, grid$lat))
@@ -41,7 +41,7 @@ studyDesign.grid <- data.frame(
 )
 
 # Batching 
-batch_size <- 500
+batch_size <- 2500
 n_sites <- nrow(XData.grid)
 batches <- split(1:n_sites, ceiling(seq_along(1:n_sites) / batch_size))
 
