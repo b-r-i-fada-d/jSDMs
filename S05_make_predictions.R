@@ -23,12 +23,7 @@ output_prefix <- "model"
 
 grid <- grid %>% drop_na()
 
-# Coordinates and environmental predictors
-# old
-# xy.grid <- as.matrix(cbind(grid$lon, grid$lat))
-# XData.grid <- grid %>% select(temp = temp, 
-#                               o2 = o2, ph = ph, 
-#                               depth = depth)
+nParallel <- 2
 
 # new
 xy.grid = as.matrix(cbind(grid$lon, grid$lat))
@@ -45,11 +40,49 @@ studyDesign.grid <- data.frame(
   site = as.factor(1:nrow(XData.grid))
 )
 
+# Batching 
+batch_size <- 500
+n_sites <- nrow(XData.grid)
+batches <- split(1:n_sites, ceiling(seq_along(1:n_sites) / batch_size))
+
+for (i in seq_along(batches)) {
+  cat("Running batch", i, "of", length(batches), "\n")
+
+  idx <- batches[[i]]
+
+  predY.batch <- predict(
+    object = model,
+    XData = XData.grid[idx, , drop = FALSE],
+    studyDesign = studyDesign.grid[idx, , drop = FALSE],
+    ranLevels = list(),
+    expected = TRUE,
+    predictEtaMean = TRUE
+  )
+
+  EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
+
+  # Add coordinates and site index
+  batchDF <- data.frame(
+    site_id = idx,
+    lon = grid$lon[idx],
+    lat = grid$lat[idx],
+    EpredY.batch
+  )
+
+  save(batchDF, file = paste0("results/predictions_batch_", i, ".RData"))
+}
+
+
+# old
+# # Coordinates and environmental predictors
+# xy.grid <- as.matrix(cbind(grid$lon, grid$lat))
+# XData.grid <- grid %>% select(temp = temp, 
+#                               o2 = o2, ph = ph, 
+#                               depth = depth)
 # # Prepare gradient (if model has spatial effects)
 # Gradient <- prepareGradient(model, XDataNew = XData.grid, sDataNew = list(station = xy.grid))
 
 # Posterior predictive distribution
-nParallel <- 2
 
 # old
 # predY <- predict(model, expected = TRUE, nParallel = nParallel)
@@ -60,16 +93,16 @@ nParallel <- 2
 
 # new
 # predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-predY.grid <- predict(
-  object = model,
-  XData = XData.grid,
-  studyDesign = studyDesign.grid,
-  ranLevels = list(),
-  predictEtaMean = TRUE,
-  expected = TRUE
-)
-
-EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
-
-
-save(EpredY.grid, file = "results/predictions_grid.RData")
+# predY.grid <- predict(
+#   object = model,
+#   XData = XData.grid,
+#   studyDesign = studyDesign.grid,
+#   ranLevels = list(),
+#   predictEtaMean = TRUE,
+#   expected = TRUE
+# )
+# 
+# EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
+# 
+# 
+# save(EpredY.grid, file = "results/predictions_grid.RData")
