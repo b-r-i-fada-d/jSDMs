@@ -34,6 +34,7 @@ XData.grid <- data.frame(ph = as.factor(grid$ph),
                          temp = as.factor(grid$temp),
                          month = as.factor(grid$month),
                          year = as.factor(grid$year),
+                         station = as. factor(grid$station),
                          stringsAsFactors = TRUE
 )
 
