@@ -32,8 +32,8 @@ XData.grid <- data.frame(ph = as.factor(grid$ph),
                          depth = as.factor(grid$depth),
                          o2 = as.factor(grid$o2),
                          temp = as.factor(grid$temp),
-                         month = as.factor(grid$Month),
-                         year = as.factor(grid$Year),
+                         month = as.factor(grid$month),
+                         year = as.factor(grid$year),
                          stringsAsFactors = TRUE
 )
 
@@ -42,7 +42,7 @@ studyDesign.grid <- data.frame(
 )
 
 # Batching 
-batch_size <- 2500
+batch_size <- 1000
 n_cores <- 4  
 n_sites <- nrow(XData.grid)
 batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
