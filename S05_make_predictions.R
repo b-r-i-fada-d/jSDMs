@@ -15,6 +15,7 @@ arguments <- parser$parse_args()
 library(Hmsc)
 library(tidyverse)
 library(ggplot2)
+library(parallel)
 
 # Read environmental data
 grid <- read_csv(arguments$env_data)
