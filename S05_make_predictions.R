@@ -116,7 +116,7 @@ predY.grid <- predict(
   object = model,
   XData = XData.grid,
   studyDesign = studyDesign.grid,
-  ranLevels = list(),
+  # ranLevels = list(),
   predictEtaMean = TRUE,
   expected = TRUE
 )
