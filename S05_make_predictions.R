@@ -111,7 +111,7 @@ studyDesign.grid <- data.frame(
 # save(EpredY, file = file.path("predictions.RData"))
 
 # new
-predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+#predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
 predY.grid <- predict(
   object = model,
   XData = XData.grid,
