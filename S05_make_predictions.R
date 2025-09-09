@@ -58,7 +58,8 @@ predict_batch <- function(i) {
     studyDesign = studyDesign.grid[idx, , drop = FALSE],
     ranLevels = list(),
     expected = TRUE,
-    predictEtaMean = TRUE
+    predictEtaMean = TRUE,
+    nsamples = 100
   )
   
   EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
