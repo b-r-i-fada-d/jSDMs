@@ -114,11 +114,11 @@ grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
 # old
 predY <- predict(model, expected = TRUE, nParallel = nParallel)
-#EpredY <- Reduce("+", predY) / length(predY)
+EpredY <- Reduce("+", predY) / length(predY)
 
 # Save predictions
 save(predY, file = file.path("predictions_raw.RData"))
-#save(EpredY, file = file.path("predictions.RData"))
+save(EpredY, file = file.path("predictions.RData"))
 
 # new
 # #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
