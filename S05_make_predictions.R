@@ -29,56 +29,56 @@ nParallel <- 4
 grid <- grid %>% dplyr::select(-geometry)
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
-xy.grid = as.matrix(cbind(grid$lon,
-                          grid$lat))
-
-XData.grid <- data.frame(ph = grid$ph, 
-                         depth = grid$depth,
-                         o2 = grid$o2,
-                         temp = grid$temp,
-                         month = grid$month,
-                         year = grid$year,
-                         station = grid$station,
-                         stringsAsFactors = TRUE
-)
-
-studyDesign.grid <- data.frame(
-  site = as.factor(1:nrow(XData.grid))
-)
-
-
-sDataNew <- list(station = XData.grid$station)
-
-# Then prepare the gradient
-Gradient <- prepareGradient(
-  model,
-  XDataNew = XData.grid,
-  sDataNew = sDataNew
-)
-
-#  --- Predict
-
-# Use posterior mean prediction (ignoring MCMC uncertainty)
-predY <- predict(
-  model,
-  Gradient = Gradient,
-  expected = TRUE,
-  nParallel = 2
-)
-
-# If predY is a list (from multiple chains/samples), average to get posterior mean
-EpredY <- Reduce("+", predY) / length(predY)
-
-# Convert to long format for plotting or further analysis
-pred_df <- cbind(grid, EpredY) %>%
-  pivot_longer(
-    cols = starts_with("V"),  # adjust if species names are different
-    names_to = "species",
-    values_to = "predicted"
-  )
-
-
-write.csv(pred_df, "spatial_predictions.csv", row.names = FALSE)
+# xy.grid = as.matrix(cbind(grid$lon,
+#                           grid$lat))
+# 
+# XData.grid <- data.frame(ph = grid$ph, 
+#                          depth = grid$depth,
+#                          o2 = grid$o2,
+#                          temp = grid$temp,
+#                          month = grid$month,
+#                          year = grid$year,
+#                          station = grid$station,
+#                          stringsAsFactors = TRUE
+# )
+# 
+# studyDesign.grid <- data.frame(
+#   site = as.factor(1:nrow(XData.grid))
+# )
+# 
+# 
+# sDataNew <- list(station = XData.grid$station)
+# 
+# # Then prepare the gradient
+# Gradient <- prepareGradient(
+#   model,
+#   XDataNew = XData.grid,
+#   sDataNew = sDataNew
+# )
+# 
+# #  --- Predict
+# 
+# # Use posterior mean prediction (ignoring MCMC uncertainty)
+# predY <- predict(
+#   model,
+#   Gradient = Gradient,
+#   expected = TRUE,
+#   nParallel = 2
+# )
+# 
+# # If predY is a list (from multiple chains/samples), average to get posterior mean
+# EpredY <- Reduce("+", predY) / length(predY)
+# 
+# # Convert to long format for plotting or further analysis
+# pred_df <- cbind(grid, EpredY) %>%
+#   pivot_longer(
+#     cols = starts_with("V"),  # adjust if species names are different
+#     names_to = "species",
+#     values_to = "predicted"
+#   )
+# 
+# 
+# write.csv(pred_df, "spatial_predictions.csv", row.names = FALSE)
 
 # 
 # # new
@@ -112,13 +112,13 @@ write.csv(pred_df, "spatial_predictions.csv", row.names = FALSE)
 
 # Posterior predictive distribution
 
-# # old
-# predY <- predict(model, expected = TRUE, nParallel = nParallel)
-# #EpredY <- Reduce("+", predY) / length(predY)
-# 
-# # Save predictions
-# save(predY, file = file.path("predictions_raw.RData"))
-# #save(EpredY, file = file.path("predictions.RData"))
+# old
+predY <- predict(model, expected = TRUE, nParallel = nParallel)
+#EpredY <- Reduce("+", predY) / length(predY)
+
+# Save predictions
+save(predY, file = file.path("predictions_raw.RData"))
+#save(EpredY, file = file.path("predictions.RData"))
 
 # new
 # #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
