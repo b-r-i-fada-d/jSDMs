@@ -89,7 +89,7 @@ batch_list <- lapply(files, function(f) {
 
 mapData <- do.call(rbind, batch_list)
 mapData <- mapData[order(mapData$site_id), ]
-mapData$site_id <- NULL
+mapData$site <- NULL
 
 save(mapData, file = "results/predictions_grid_combined.RData")
 
