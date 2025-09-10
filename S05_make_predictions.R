@@ -67,7 +67,7 @@ predict_batch <- function(i) {
   EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
 
   batchDF <- data.frame(
-    site_id = idx,
+    site = idx,
     lon = grid$lon[idx],
     lat = grid$lat[idx],
     EpredY.batch
@@ -88,7 +88,7 @@ batch_list <- lapply(files, function(f) {
 })
 
 mapData <- do.call(rbind, batch_list)
-mapData <- mapData[order(mapData$site_id), ]
+mapData <- mapData[order(mapData$site), ]
 mapData$site <- NULL
 
 save(mapData, file = "results/predictions_grid_combined.RData")
