@@ -52,7 +52,7 @@ sDataNew <- list(station = XData.grid$station)
 # Then prepare the gradient
 Gradient <- prepareGradient(
   model,
-  XDataNew = XDataNew,
+  XDataNew = XData.grid,
   sDataNew = sDataNew
 )
 
