@@ -42,6 +42,9 @@ XData <- data.frame(#station = as.factor(grid$station),
 studyDesign <- data.frame(station = as.factor(grid$station),
                           year = as.factor(grid$year))
 
+xy = as.matrix(cbind(grid$lon,
+                     grid$lat))
+
 xy <- unique(xy)
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
@@ -54,9 +57,7 @@ ranLevels = list(station = rL.station,
 
 
 
-# xy.grid = as.matrix(cbind(grid$lon,
-#                           grid$lat))
-# 
+
 # XData.grid <- data.frame(ph = grid$ph, 
 #                          depth = grid$depth,
 #                          o2 = grid$o2,
