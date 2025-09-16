@@ -81,25 +81,36 @@ grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 # write.csv(pred_df, "spatial_predictions.csv", row.names = FALSE)
 
 # 
-# # new
-# xy.grid = as.matrix(cbind(grid$lon,
-#                           grid$lat))
-# 
-# XData.grid <- data.frame(ph = as.factor(grid$ph),
-#                          depth = as.factor(grid$depth),
-#                          o2 = as.factor(grid$o2),
-#                          temp = as.factor(grid$SBT),
-#                          month = as.factor(grid$Month),
-#                          year = as.factor(grid$Year),
-#                          station = as.factor(grid$station),
-#                          stringsAsFactors = TRUE
-# )
+# new 16.09.2025
+xy = as.matrix(cbind(grid$lon,
+                     grid$lat))
+xy <- unique(xy)
+
+XData <- data.frame(ph = as.factor(grid$ph),
+                    depth = as.factor(grid$depth),
+                    o2 = as.factor(grid$o2),
+                    temp = as.factor(grid$SBT),
+                    month = as.factor(grid$Month),
+                    year = as.factor(grid$Year),
+                    # station = as.factor(grid$station),
+                    stringsAsFactors = TRUE
+)
 # 
 # studyDesign.grid <- data.frame(
 #   station = as.factor(1:nrow(XData.grid))
 # )
-# 
-# 
+
+
+studyDesign <- data.frame(station = as.factor(XData$station),
+                          year = as.factor(XData$year))
+
+
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+
+ranLevels = list(station = rL.station,
+                 year = rL.year)
+
 
 # old
 # # Coordinates and environmental predictors
@@ -110,31 +121,29 @@ grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 # # Prepare gradient (if model has spatial effects)
 # Gradient <- prepareGradient(model, XDataNew = XData.grid, sDataNew = list(station = xy.grid))
 
-# Posterior predictive distribution
-
-# old
-predY <- predict(model, expected = TRUE, nParallel = nParallel)
-EpredY <- Reduce("+", predY) / length(predY)
-
-# Save predictions
-save(predY, file = file.path("predictions_raw.RData"))
-save(EpredY, file = file.path("predictions.RData"))
+# # Posterior predictive distribution
+# 
+# # old
+# predY <- predict(model, expected = TRUE, nParallel = nParallel)
+# EpredY <- Reduce("+", predY) / length(predY)
+# 
+# # Save predictions
+# save(predY, file = file.path("predictions_raw.RData"))
+# save(EpredY, file = file.path("predictions.RData"))
 
 # new
-# #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-# predY.grid <- predict(
-#   object = model,
-#   XData = XData.grid,
-#   studyDesign = studyDesign.grid,
-#   # ranLevels = list(),
-#   predictEtaMean = TRUE,
-#   expected = TRUE
-# )
-# 
-# EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
+#predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+predY <- predict(model,
+                 XData = XData,
+                 studyDesign = studyDesign,
+                 ranLevels = ranLevels,
+                 predictEtaMean = TRUE,
+                 expected = TRUE
+)
 
-# 
-# save(EpredY.grid, file = "results/predictions_grid.RData")
+EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
+
+save(EpredY.grid, file = "results/predictions_grid.RData")
 
 
 
