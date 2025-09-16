@@ -23,7 +23,6 @@ model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
 output_prefix <- "model"
 
 grid <- grid %>% drop_na()
-grid <- grid %>% filter(year >= 2010)
 
 nParallel <- 4
 
