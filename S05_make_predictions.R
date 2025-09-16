@@ -162,7 +162,7 @@ ranLevels = list(station = rL.station,
 predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
-                 ranLevels = ranLevels,
+                 ranLevels = list(),
                  predictEtaMean = TRUE,
                  expected = TRUE
 )
