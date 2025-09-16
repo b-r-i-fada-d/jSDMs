@@ -45,7 +45,7 @@ studyDesign <- data.frame(station = as.factor(grid$station),
 xy = as.matrix(cbind(as.factor(grid$lon),
                      as.factor(grid$lat)))
 
-xy <- unique(xy)
+# xy <- unique(xy)
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 rL.year = HmscRandomLevel(units = levels(studyDesign$year))
