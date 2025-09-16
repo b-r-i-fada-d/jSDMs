@@ -51,7 +51,7 @@ Y = as.matrix(Y)
 
 XData = data.frame(#station = as.factor(df$station), 
                    year = as.factor(df$year), month = as.factor(df$month),
-                   lon = as.factor(df$lon), lat = as.factor(df$lat),
+                   # lon = as.factor(df$lon), lat = as.factor(df$lat),
                    o2 = df$o2, temp = df$temp,
                    ph = df$ph, depth = df$depth)
 
