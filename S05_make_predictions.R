@@ -29,6 +29,31 @@ nParallel <- 4
 grid <- grid %>% dplyr::select(-geometry)
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
+XData <- data.frame(#station = as.factor(grid$station),
+  year = as.factor(grid$year), 
+  month = as.factor(grid$month),
+  lon = as.factor(grid$lon), 
+  lat = as.factor(grid$lat),
+  o2 = grid$o2, 
+  temp = grid$temp,
+  ph = grid$ph, 
+  depth = grid$depth)
+
+studyDesign <- data.frame(station = as.factor(grid$station),
+                          year = as.factor(grid$year))
+
+xy <- unique(xy)
+
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+
+ranLevels = list(station = rL.station,
+                 year = rL.year)
+
+
+
+
+
 # xy.grid = as.matrix(cbind(grid$lon,
 #                           grid$lat))
 # 
@@ -81,35 +106,35 @@ grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 # write.csv(pred_df, "spatial_predictions.csv", row.names = FALSE)
 
 # 
-# new 16.09.2025
-xy = as.matrix(cbind(grid$lon,
-                     grid$lat))
-xy <- unique(xy)
-
-XData <- data.frame(ph = as.factor(grid$ph),
-                    depth = as.factor(grid$depth),
-                    o2 = as.factor(grid$o2),
-                    temp = as.factor(grid$SBT),
-                    month = as.factor(grid$Month),
-                    year = as.factor(grid$Year),
-                    # station = as.factor(grid$station),
-                    stringsAsFactors = TRUE
-)
+# # new 16.09.2025
+# xy = as.matrix(cbind(grid$lon,
+#                      grid$lat))
+# xy <- unique(xy)
+# 
+# XData <- data.frame(ph = as.factor(grid$ph),
+#                     depth = as.factor(grid$depth),
+#                     o2 = as.factor(grid$o2),
+#                     temp = as.factor(grid$SBT),
+#                     month = as.factor(grid$Month),
+#                     year = as.factor(grid$Year),
+#                     # station = as.factor(grid$station),
+#                     stringsAsFactors = TRUE
+# )
 # 
 # studyDesign.grid <- data.frame(
 #   station = as.factor(1:nrow(XData.grid))
 # )
 
 
-studyDesign <- data.frame(station = as.factor(grid$station),
-                          year = as.factor(grid$year))
-
-
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-rL.year = HmscRandomLevel(units = levels(studyDesign$year))
-
-ranLevels = list(station = rL.station,
-                 year = rL.year)
+# studyDesign <- data.frame(station = as.factor(grid$station),
+#                           year = as.factor(grid$year))
+# 
+# 
+# rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+# rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+# 
+# ranLevels = list(station = rL.station,
+#                  year = rL.year)
 
 
 # old
