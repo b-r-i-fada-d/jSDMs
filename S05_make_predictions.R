@@ -41,7 +41,8 @@ XData <- data.frame(#station = as.factor(grid$station),
 rownames(XData) <- c(1:nrow(XData))
 
 studyDesign <- data.frame(station = as.factor(grid$station),
-                          year = as.factor(grid$year))
+                          year = as.factor(grid$year), 
+                          stringsAsFactors = TRUE)
 
 xy = as.matrix(cbind(as.factor(grid$lon),
                      as.factor(grid$lat)))
