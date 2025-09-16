@@ -32,12 +32,13 @@ grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 XData <- data.frame(#station = as.factor(grid$station),
   year = as.factor(grid$year), 
   month = as.factor(grid$month),
-  lon = as.factor(grid$lon), 
-  lat = as.factor(grid$lat),
+  # lon = as.factor(grid$lon), 
+  # lat = as.factor(grid$lat),
   o2 = grid$o2, 
   temp = grid$temp,
   ph = grid$ph, 
   depth = grid$depth)
+rownames(XData) <- c(1:nrow(XData))
 
 studyDesign <- data.frame(station = as.factor(grid$station),
                           year = as.factor(grid$year))
