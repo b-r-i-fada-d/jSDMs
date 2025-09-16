@@ -40,8 +40,8 @@ XData <- data.frame(#station = as.factor(grid$station),
   depth = grid$depth)
 rownames(XData) <- c(1:nrow(XData))
 
-studyDesign <- data.frame(station = as.factor(grid$station),
-                          year = as.factor(grid$year), 
+studyDesign <- data.frame(station = grid$station, # remove as.factor
+                          year = grid$year, # remove as.factor
                           stringsAsFactors = TRUE)
 
 xy = as.matrix(cbind(as.factor(grid$lon),
