@@ -101,8 +101,8 @@ XData <- data.frame(ph = as.factor(grid$ph),
 # )
 
 
-studyDesign <- data.frame(station = as.factor(XData$station),
-                          year = as.factor(XData$year))
+studyDesign <- data.frame(station = as.factor(grid$station),
+                          year = as.factor(grid$year))
 
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
