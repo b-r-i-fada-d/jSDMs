@@ -40,14 +40,20 @@ XData <- data.frame(#station = as.factor(grid$station),
   depth = grid$depth)
 rownames(XData) <- c(1:nrow(XData))
 
-studyDesign <- data.frame(station = grid$station, # remove as.factor
-                          year = grid$year, # remove as.factor
+studyDesign <- data.frame(station = as.factor(grid$station),
+                          year = as.factor(grid$year), 
                           stringsAsFactors = TRUE)
 
-xy = as.matrix(cbind(as.factor(grid$lon),
-                     as.factor(grid$lat)))
 
+xy = as.matrix(cbind(df$lon, df$lat))
+rownames(xy) = as.character(df$station)
+colnames(xy) = c("x-coordinate", "y-coordinate")
 xy <- unique(xy)
+
+# xy = as.matrix(cbind(as.factor(grid$lon),
+#                      as.factor(grid$lat)))
+# 
+# xy <- unique(xy)
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 rL.year = HmscRandomLevel(units = levels(studyDesign$year))
