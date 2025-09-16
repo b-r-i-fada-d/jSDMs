@@ -45,8 +45,8 @@ studyDesign <- data.frame(station = as.factor(grid$station),
                           stringsAsFactors = TRUE)
 
 
-xy = as.matrix(cbind(df$lon, df$lat))
-rownames(xy) = as.character(df$station)
+xy = as.matrix(cbind(grid$lon, grid$lat))
+rownames(xy) = as.character(grid$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 xy <- unique(xy)
 
