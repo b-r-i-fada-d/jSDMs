@@ -42,8 +42,8 @@ XData <- data.frame(#station = as.factor(grid$station),
 studyDesign <- data.frame(station = as.factor(grid$station),
                           year = as.factor(grid$year))
 
-xy = as.matrix(cbind(grid$lon,
-                     grid$lat))
+xy = as.matrix(cbind(as.factor(grid$lon),
+                     as.factor(grid$lat)))
 
 xy <- unique(xy)
 
