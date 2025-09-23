@@ -26,7 +26,7 @@ grid <- grid %>% drop_na()
 
 nParallel <- 4
 
-grid <- grid %>% dplyr::select(-geometry)
+#grid <- grid %>% dplyr::select(-geometry)
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
 XData <- data.frame(#station = as.factor(grid$station),
