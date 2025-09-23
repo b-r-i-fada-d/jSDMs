@@ -40,15 +40,19 @@ XData <- data.frame(#station = as.factor(grid$station),
   depth = grid$depth)
 rownames(XData) <- c(1:nrow(XData))
 
-studyDesign <- data.frame(station = as.factor(grid$station),
-                          year = as.factor(grid$year), 
-                          stringsAsFactors = TRUE)
-
-
 xy = as.matrix(cbind(grid$lon, grid$lat))
 rownames(xy) = as.character(grid$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 xy <- unique(xy)
+
+#23.09.25 - changed studydesign. removed year & changed station to xy
+
+studyDesign <- data.frame(station = as.factor(grid$station),
+                          #year = as.factor(grid$year), 
+                          #station = xy,
+                          stringsAsFactors = TRUE)
+
+
 
 # xy = as.matrix(cbind(as.factor(grid$lon),
 #                      as.factor(grid$lat)))
