@@ -50,7 +50,7 @@ Y = as.matrix(Y)
 # --- Select environmental data
 
 XData = data.frame(#station = as.factor(df$station), 
-                   # year = as.factor(df$year), month = as.factor(df$month),
+                   year = as.factor(df$year), month = as.factor(df$month),
                    # lon = as.factor(df$lon), lat = as.factor(df$lat),
                    o2 = df$o2, temp = df$temp,
                    ph = df$ph, depth = df$depth)
@@ -67,17 +67,19 @@ xy <- unique(xy)
 
 # --- Study design
 
-studyDesign <- data.frame(station = as.factor(df$station),
-                          year = as.factor(df$year))
+studyDesign <- data.frame(station = as.factor(df$station)#,
+                         # year = as.factor(df$year) #23.09 remove year rL
+                         )
 
 # --- Random effect structure (hierarchical study design)
 
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP") 
+                             
+#rL.year = HmscRandomLevel(units = df$year) #23.09 remove year rL
 
 # --- Regression model for environmental covariates
 
-XFormula = ~ o2 + temp + ph + depth # + month + year
+XFormula = ~ o2 + temp + ph + depth + month + year
 
 #### --- Construct the model --- ####
 
