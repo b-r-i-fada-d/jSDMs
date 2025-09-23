@@ -174,7 +174,8 @@ rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
-                 ranLevels = list(station = rL.station), 
+                 ranLevels = rL.station, 
+                 # ranLevels = list(station = rL.station), # remove listed rL
                                  # year = rL.year), #23.09 remove year rL
                  predictEtaMean = TRUE,
                  expected = TRUE
