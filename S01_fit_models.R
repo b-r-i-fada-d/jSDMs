@@ -70,6 +70,7 @@ xy <- unique(xy)
 studyDesign <- data.frame(station = as.factor(df$station)#,
                          # year = as.factor(df$year) #23.09 remove year rL
                          )
+studyDesign <- unique(studyDesign)
 
 # --- Random effect structure (hierarchical study design)
 
@@ -87,10 +88,11 @@ if (arguments$model_type == "full"){
   model = Hmsc(Y = Y, XData = XData,
                XFormula = XFormula,
                distr = "probit", # because PA
-               studyDesign = studyDesign,
-               ranLevels = list(station = rL.station#, 
+               studyDesign = studyDesign#, #23.09 remove rLs
+               # ranLevels = list(station = rL.station#, 
                               #  year = rL.year HMSC-HPC.Prep.3599687.err
-                                ))
+                                )
+  #)
 } else if (arguments$model_type == "environmental"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = XFormula,
