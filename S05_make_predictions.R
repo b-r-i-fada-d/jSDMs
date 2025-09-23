@@ -60,7 +60,7 @@ studyDesign <- data.frame(station = as.factor(grid$station),
 # xy <- unique(xy)
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+# rL.year = HmscRandomLevel(units = levels(studyDesign$year)) #23.09 remove year rL
 
 # ranLevels = list(station = rL.station,
 #                  year = rL.year)
@@ -174,15 +174,15 @@ rL.year = HmscRandomLevel(units = levels(studyDesign$year))
 predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
-                 ranLevels = list(station = rL.station, 
-                                  year = rL.year),
+                 ranLevels = list(station = rL.station), 
+                                 # year = rL.year), #23.09 remove year rL
                  predictEtaMean = TRUE,
                  expected = TRUE
 )
 
 EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
 
-save(EpredY.grid, file = "results/predictions_grid.RData")
+save(EpredY.grid, file = "results/predictions_noyr.RData")
 
 
 
