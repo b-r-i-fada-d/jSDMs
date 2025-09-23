@@ -70,7 +70,7 @@ xy <- unique(xy)
 studyDesign <- data.frame(station = as.factor(df$station)#,
                          # year = as.factor(df$year) #23.09 remove year rL
                          )
-studyDesign <- unique(studyDesign)
+# studyDesign <- unique(studyDesign)
 
 # --- Random effect structure (hierarchical study design)
 
