@@ -60,7 +60,7 @@ studyDesign <- data.frame(station = as.factor(grid$station),
 # xy <- unique(xy)
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-ranLevels = rL.station[["pi"]]
+ranLevels = rL.station#[["pi"]]
 # rL.year = HmscRandomLevel(units = levels(studyDesign$year)) #23.09 remove year rL
 
 # ranLevels = list(station = rL.station,
