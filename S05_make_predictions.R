@@ -3,8 +3,8 @@
 #SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=4:00:00
-#SBATCH --partition=cpu
+#SBATCH --time=12:00:00
+#SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
