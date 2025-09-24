@@ -194,7 +194,7 @@ ranLevels = rL.station#[["pi"]]
 
 batch_size <- 1000
 n_cores <- 4
-n_sites <- nrow(XData.grid)
+n_sites <- nrow(XData)
 batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
 
 predict_batch <- function(i) {
