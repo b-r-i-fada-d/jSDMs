@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
 #SBATCH --time=20:00:00
-#SBATCH --partition=largemem
+#SBATCH --partition=cpu
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
@@ -170,73 +170,73 @@ ranLevels = rL.station#[["pi"]]
 # save(predY, file = file.path("predictions_raw.RData"))
 # save(EpredY, file = file.path("predictions.RData"))
 
-# new
-#predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-predY <- predict(model,
-                 XData = XData,
-                 studyDesign = studyDesign,
-                 ranLevels = ranLevels, 
-                 # ranLevels = list(station = rL.station), # remove listed rL
-                                 # year = rL.year), #23.09 remove year rL
-                 predictEtaMean = TRUE,
-                 expected = TRUE
-)
-
-EpredY.grid <- Reduce("+", predY.grid) / length(predY.grid)
-
-save(EpredY.grid, file = "results/predictions_noyr.RData")
+# TRY THIS 24.09.2025 - it worked but there was a typo while saving
+# #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+# predY <- predict(model,
+#                  XData = XData,
+#                  studyDesign = studyDesign,
+#                  ranLevels = ranLevels, 
+#                  # ranLevels = list(station = rL.station), # remove listed rL
+#                                  # year = rL.year), #23.09 remove year rL
+#                  predictEtaMean = TRUE,
+#                  expected = TRUE
+# )
+# 
+# EpredY <- Reduce("+", predY) / length(predY)
+# 
+# save(EpredY, file = "results/predictions_noyr.RData")
 
 
 
 
 
 #### --- Batching --- ####
-# 
-# batch_size <- 1000
-# n_cores <- 4
-# n_sites <- nrow(XData.grid)
-# batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
-# 
-# predict_batch <- function(i) {
-#   idx <- batches[[i]]
-# 
-#   cat("Running batch", i, "of", length(batches), "\n")
-# 
-#   predY.batch <- predict(
-#     object = model,
-#     XData = XData.grid[idx, , drop = FALSE],
-#     studyDesign = studyDesign.grid[idx, , drop = FALSE],
-#     ranLevels = list(),
-#     expected = TRUE,
-#     predictEtaMean = TRUE
-#   )
-# 
-#   EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
-# 
-#   batchDF <- data.frame(
-#     site = idx,
-#     lon = grid$lon[idx],
-#     lat = grid$lat[idx],
-#     EpredY.batch
-#   )
-# 
-#   save(batchDF, file = paste0("results/predictions_batch_", i, ".RData"))
-#   return(NULL)
-# }
-# 
-# mclapply(seq_along(batches), predict_batch, mc.cores = n_cores)
-# cat("All batches submitted.\n")
-# 
-# files <- list.files("results", pattern = "predictions_batch_.*\\.RData", full.names = TRUE)
-# 
-# batch_list <- lapply(files, function(f) {
-#   load(f)  # loads batchDF
-#   batchDF
-# })
-# 
-# mapData <- do.call(rbind, batch_list)
-# mapData <- mapData[order(mapData$site), ]
-# mapData$site <- NULL
-# 
-# save(mapData, file = "results/predictions_grid_combined.RData")
+
+batch_size <- 1000
+n_cores <- 4
+n_sites <- nrow(XData.grid)
+batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
+
+predict_batch <- function(i) {
+  idx <- batches[[i]]
+
+  cat("Running batch", i, "of", length(batches), "\n")
+
+  predY.batch <- predict(
+    object = model,
+    XData = XData[idx, , drop = FALSE],
+    studyDesign = studyDesign[idx, , drop = FALSE],
+    ranLevels = rnaLevels,
+    expected = TRUE,
+    predictEtaMean = TRUE
+  )
+
+  EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
+
+  batchDF <- data.frame(
+    site = idx,
+    lon = grid$lon[idx],
+    lat = grid$lat[idx],
+    EpredY.batch
+  )
+
+  save(batchDF, file = paste0("results/predictions_batch_", i, ".RData"))
+  return(NULL)
+}
+
+mclapply(seq_along(batches), predict_batch, mc.cores = n_cores)
+cat("All batches submitted.\n")
+
+files <- list.files("results", pattern = "predictions_batch_.*\\.RData", full.names = TRUE)
+
+batch_list <- lapply(files, function(f) {
+  load(f)  # loads batchDF
+  batchDF
+})
+
+mapData <- do.call(rbind, batch_list)
+mapData <- mapData[order(mapData$site), ]
+mapData$site <- NULL
+
+save(mapData, file = "results/predictions_grid_combined.RData")
 
