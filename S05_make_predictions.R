@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 
-#SBATCH --job-name=HMSC-HPC.Prep
+#SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=20:00:00
+#SBATCH --time=8:00:00
 #SBATCH --partition=cpu
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
