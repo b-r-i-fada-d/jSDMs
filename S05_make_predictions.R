@@ -170,12 +170,13 @@ ranLevels = rL.station#[["pi"]]
 # save(predY, file = file.path("predictions_raw.RData"))
 # save(EpredY, file = file.path("predictions.RData"))
 
-# TRY THIS 24.09.2025 - it worked but there was a typo while saving
+#############################################################################
+# # TRY THIS 24.09.2025 - it worked but there was a typo while saving
 # #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
 # predY <- predict(model,
 #                  XData = XData,
 #                  studyDesign = studyDesign,
-#                  ranLevels = ranLevels, 
+#                  ranLevels = ranLevels,
 #                  # ranLevels = list(station = rL.station), # remove listed rL
 #                                  # year = rL.year), #23.09 remove year rL
 #                  predictEtaMean = TRUE,
@@ -185,58 +186,140 @@ ranLevels = rL.station#[["pi"]]
 # EpredY <- Reduce("+", predY) / length(predY)
 # 
 # save(EpredY, file = "results/predictions_noyr.RData")
+#############################################################################
 
 
 
 
+library(purrr)   # for map
+library(abind)   # for combining arrays
 
-#### --- Batching --- ####
-
+# -----------------------------
+# Batching setup
+# -----------------------------
 batch_size <- 1000
-n_cores <- 4
 n_sites <- nrow(XData)
-batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
+batches <- split(seq_len(n_sites), ceiling(seq_len(n_sites) / batch_size))
 
-predict_batch <- function(i) {
-  idx <- batches[[i]]
-
-  cat("Running batch", i, "of", length(batches), "\n")
-
+# -----------------------------
+# Function to run prediction on one batch
+# -----------------------------
+predict_batch <- function(idx) {
   predY.batch <- predict(
     object = model,
     XData = XData[idx, , drop = FALSE],
     studyDesign = studyDesign[idx, , drop = FALSE],
     ranLevels = ranLevels,
-    expected = TRUE,
-    predictEtaMean = TRUE
+    predictEtaMean = TRUE,
+    expected = TRUE
   )
-
-  EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
-
-  batchDF <- data.frame(
-    site = idx,
-    lon = grid$lon[idx],
-    lat = grid$lat[idx],
-    EpredY.batch
-  )
-
-  save(batchDF, file = paste0("results/predictions_batch_", i, ".RData"))
-  return(NULL)
+  
+  # average across posterior samples (faster than Reduce("+", ...))
+  EpredY.batch <- apply(simplify2array(predY.batch), c(1, 2), mean)
+  return(EpredY.batch)
 }
 
-mclapply(seq_along(batches), predict_batch, mc.cores = n_cores)
-cat("All batches submitted.\n")
+# -----------------------------
+# Run predictions batch by batch
+# -----------------------------
+batch_results <- map(batches, predict_batch)
 
-files <- list.files("results", pattern = "predictions_batch_.*\\.RData", full.names = TRUE)
+# -----------------------------
+# Recombine batches
+# -----------------------------
+EpredY <- do.call(rbind, batch_results)
 
-batch_list <- lapply(files, function(f) {
-  load(f)  # loads batchDF
-  batchDF
-})
+# -----------------------------
+# Save final result
+# -----------------------------
+save(EpredY, file = "results/predictions_noyr.RData")
 
-mapData <- do.call(rbind, batch_list)
-mapData <- mapData[order(mapData$site), ]
-mapData$site <- NULL
 
-save(mapData, file = "results/predictions_grid_combined.RData")
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# #### --- Batching --- ####
+# 
+# batch_size <- 1000
+# n_cores <- 4
+# n_sites <- nrow(XData)
+# batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
+# 
+# predict_batch <- function(i) {
+#   idx <- batches[[i]]
+# 
+#   cat("Running batch", i, "of", length(batches), "\n")
+# 
+#   predY.batch <- predict(
+#     object = model,
+#     XData = XData[idx, , drop = FALSE],
+#     studyDesign = studyDesign[idx, , drop = FALSE],
+#     ranLevels = ranLevels,
+#     expected = TRUE,
+#     predictEtaMean = TRUE
+#   )
+# 
+#   EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
+# 
+#   batchDF <- data.frame(
+#     site = idx,
+#     lon = grid$lon[idx],
+#     lat = grid$lat[idx],
+#     EpredY.batch
+#   )
+# 
+#   save(batchDF, file = paste0("results/predictions_batch_", i, ".RData"))
+#   return(NULL)
+# }
+# 
+# mclapply(seq_along(batches), predict_batch, mc.cores = n_cores)
+# cat("All batches submitted.\n")
+# 
+# files <- list.files("results", pattern = "predictions_batch_.*\\.RData", full.names = TRUE)
+# 
+# batch_list <- lapply(files, function(f) {
+#   load(f)  # loads batchDF
+#   batchDF
+# })
+# 
+# mapData <- do.call(rbind, batch_list)
+# mapData <- mapData[order(mapData$site), ]
+# mapData$site <- NULL
+# 
+# save(mapData, file = "results/predictions_grid_combined.RData")
+# 
