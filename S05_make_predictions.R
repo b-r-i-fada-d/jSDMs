@@ -206,7 +206,7 @@ predict_batch <- function(i) {
     object = model,
     XData = XData[idx, , drop = FALSE],
     studyDesign = studyDesign[idx, , drop = FALSE],
-    ranLevels = rnaLevels,
+    ranLevels = ranLevels,
     expected = TRUE,
     predictEtaMean = TRUE
   )
