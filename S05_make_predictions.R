@@ -172,122 +172,86 @@ ranLevels = rL.station#[["pi"]]
 
 #############################################################################
 # # TRY THIS 24.09.2025 - it worked but there was a typo while saving
-# #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-# predY <- predict(model,
-#                  XData = XData,
-#                  studyDesign = studyDesign,
-#                  ranLevels = ranLevels,
-#                  # ranLevels = list(station = rL.station), # remove listed rL
-#                                  # year = rL.year), #23.09 remove year rL
-#                  predictEtaMean = TRUE,
-#                  expected = TRUE
-# )
-# 
-# EpredY <- Reduce("+", predY) / length(predY)
-# 
-# save(EpredY, file = "results/predictions_noyr.RData")
+#predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
+predY <- predict(model,
+                 XData = XData,
+                 studyDesign = studyDesign,
+                 ranLevels = ranLevels,
+                 # ranLevels = list(station = rL.station), # remove listed rL
+                                 # year = rL.year), #23.09 remove year rL
+                 predictEtaMean = TRUE,
+                 expected = TRUE
+)
+
+EpredY <- Reduce("+", predY) / length(predY)
+
+save(EpredY, file = "results/predictions_noyr.RData")
 #############################################################################
 
-
-
-
-library(future.apply)
-library(abind)
-
-# -----------------------------
-# Batching setup
-# -----------------------------
-batch_size <- 1000
-n_sites <- nrow(XData)
-batches <- split(seq_len(n_sites), ceiling(seq_len(n_sites) / batch_size))
-
-cat("Total sites:", n_sites, "\n")
-cat("Batch size:", batch_size, "\n")
-cat("Number of batches:", length(batches), "\n\n")
-
-# -----------------------------
-# Set up parallel backend
-# -----------------------------
-n_cores <- 4   # adjust to your machine
-plan(multisession, workers = n_cores)
-
-# -----------------------------
-# Function to run prediction on one batch
-# -----------------------------
-predict_batch <- function(i) {
-  idx <- batches[[i]]
-  cat("Starting batch", i, "(", length(idx), "rows ) ...\n")
-  
-  predY.batch <- predict(
-    object = model,
-    XData = XData[idx, , drop = FALSE],
-    studyDesign = studyDesign[idx, , drop = FALSE],
-    ranLevels = ranLevels,
-    predictEtaMean = TRUE,
-    expected = TRUE
-  )
-  
-  # average across posterior samples (faster than Reduce("+", ...))
-  EpredY.batch <- apply(simplify2array(predY.batch), c(1, 2), mean)
-  
-  cat("Finished batch", i, "\n")
-  return(EpredY.batch)
-}
-
-# -----------------------------
-# Run predictions in parallel
-# -----------------------------
-batch_results <- future_lapply(seq_along(batches), predict_batch,
-                               future.seed = TRUE)
-
-cat("\nAll batches completed.\n")
-
-# -----------------------------
-# Recombine batches
-# -----------------------------
-EpredY <- do.call(rbind, batch_results)
-
-# -----------------------------
-# Save final result
-# -----------------------------
-save(EpredY, file = "results/predictions_noyr.RData")
-cat("Saved predictions to results/predictions_noyr.RData\n")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 
+# 
+# 
+# library(future.apply)
+# library(abind)
+# 
+# # -----------------------------
+# # Batching setup
+# # -----------------------------
+# batch_size <- 1000
+# n_sites <- nrow(XData)
+# batches <- split(seq_len(n_sites), ceiling(seq_len(n_sites) / batch_size))
+# 
+# cat("Total sites:", n_sites, "\n")
+# cat("Batch size:", batch_size, "\n")
+# cat("Number of batches:", length(batches), "\n\n")
+# 
+# # -----------------------------
+# # Set up parallel backend
+# # -----------------------------
+# n_cores <- 4   # adjust to your machine
+# plan(multisession, workers = n_cores)
+# 
+# # -----------------------------
+# # Function to run prediction on one batch
+# # -----------------------------
+# predict_batch <- function(i) {
+#   idx <- batches[[i]]
+#   cat("Starting batch", i, "(", length(idx), "rows ) ...\n")
+#   
+#   predY.batch <- predict(
+#     object = model,
+#     XData = XData[idx, , drop = FALSE],
+#     studyDesign = studyDesign[idx, , drop = FALSE],
+#     ranLevels = ranLevels,
+#     predictEtaMean = TRUE,
+#     expected = TRUE
+#   )
+#   
+#   # average across posterior samples (faster than Reduce("+", ...))
+#   EpredY.batch <- apply(simplify2array(predY.batch), c(1, 2), mean)
+#   
+#   cat("Finished batch", i, "\n")
+#   return(EpredY.batch)
+# }
+# 
+# # -----------------------------
+# # Run predictions in parallel
+# # -----------------------------
+# batch_results <- future_lapply(seq_along(batches), predict_batch,
+#                                future.seed = TRUE)
+# 
+# cat("\nAll batches completed.\n")
+# 
+# # -----------------------------
+# # Recombine batches
+# # -----------------------------
+# EpredY <- do.call(rbind, batch_results)
+# 
+# # -----------------------------
+# # Save final result
+# # -----------------------------
+# save(EpredY, file = "results/predictions_noyr.RData")
+# cat("Saved predictions to results/predictions_noyr.RData\n")
 
 
 # #### --- Batching --- ####
