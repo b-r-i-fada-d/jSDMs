@@ -187,7 +187,7 @@ predY <- predict(model,
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path(output_dir, "predictions_noyr.RData"))
+save(EpredY, file = file.path("results_yr/predictions_noyr.RData"))
 #############################################################################
 
 # 
