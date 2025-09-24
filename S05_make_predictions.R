@@ -3,7 +3,7 @@
 #SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=12:00:00
+#SBATCH --time=07:00:00
 #SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -28,6 +28,8 @@ nParallel <- 4
 
 #grid <- grid %>% dplyr::select(-geometry)
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
+
+grid <- grid %>% filter(year == 2022)
 
 XData <- data.frame(#station = as.factor(grid$station),
   year = as.factor(grid$year), 
@@ -185,7 +187,7 @@ predY <- predict(model,
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results/predictions_noyr.RData"))
+save(EpredY, file = file.path(output_dir, "predictions_noyr.RData"))
 #############################################################################
 
 # 
