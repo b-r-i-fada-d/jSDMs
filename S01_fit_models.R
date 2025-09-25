@@ -90,11 +90,11 @@ if (arguments$model_type == "full"){
                XFormula = XFormula,
                distr = "probit", # because PA
                studyDesign = studyDesign, #25.09 add back  rLs
-               ranLevels = ranLevels #,
+               ranLevels = ranLevels 
+               #,
                # ranLevels = list(station = rL.station,
-               #  year = rL.year #HMSC-HPC.Prep.3599687.err
-                                )
-  #)
+               #  year = rL.year #HMSC-HPC.Prep.3599687.err)
+  )
 } else if (arguments$model_type == "environmental"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = XFormula,
