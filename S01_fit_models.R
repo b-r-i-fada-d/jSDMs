@@ -67,16 +67,17 @@ xy <- unique(xy)
 
 # --- Study design
 
-studyDesign <- data.frame(station = as.factor(df$station)#,
-                         # year = as.factor(df$year) #23.09 remove year rL
+studyDesign <- data.frame(station = as.factor(df$station)# , # added back 
+                         # year = as.factor(df$year) #25.09 uncommented this line
                          )
-# studyDesign <- unique(studyDesign)
 
 # --- Random effect structure (hierarchical study design)
 
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP") 
+rL.station = HmscRandomLevel(sData = xy)#, sMethod = "NNGP") #25.09 remove NNGP
+ranLevels = list(station = rL.station)
+
                              
-#rL.year = HmscRandomLevel(units = df$year) #23.09 remove year rL
+# rL.year = HmscRandomLevel(units = df$year) #25.09 add back year rL
 
 # --- Regression model for environmental covariates
 
@@ -88,9 +89,10 @@ if (arguments$model_type == "full"){
   model = Hmsc(Y = Y, XData = XData,
                XFormula = XFormula,
                distr = "probit", # because PA
-               studyDesign = studyDesign#, #23.09 remove rLs
-               # ranLevels = list(station = rL.station#, 
-                              #  year = rL.year HMSC-HPC.Prep.3599687.err
+               studyDesign = studyDesign, #25.09 add back  rLs
+               ranLevels = ranLevels,
+               # ranLevels = list(station = rL.station,
+               #  year = rL.year #HMSC-HPC.Prep.3599687.err
                                 )
   #)
 } else if (arguments$model_type == "environmental"){
