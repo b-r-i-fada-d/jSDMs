@@ -67,13 +67,13 @@ xy <- unique(xy)
 
 # --- Study design
 
-studyDesign <- data.frame(station = as.factor(df$station)# , # added back 
-                         # year = as.factor(df$year) #25.09 uncommented this line
+studyDesign <- data.frame(station = as.factor(df$station) #, 
+                         # year = as.factor(df$year) 
                          )
 
 # --- Random effect structure (hierarchical study design)
 
-rL.station = HmscRandomLevel(sData = xy)#, sMethod = "NNGP") #25.09 remove NNGP
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 ranLevels = list(station = rL.station)
 
                              
