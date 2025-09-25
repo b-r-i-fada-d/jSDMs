@@ -4,7 +4,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=32G
 #SBATCH --gpus-per-node=1
-#SBATCH --time=04:00:00
+#SBATCH --time=00:20:00
 #SBATCH --partition=gpu
 #SBATCH --output=%x.%j.%a.out
 #SBATCH --error=%x.%j.%a.err
