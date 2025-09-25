@@ -74,7 +74,7 @@ task_id="${SLURM_ARRAY_TASK_ID:-0}"
 
 python -m hmsc.run_gibbs_sampler \
 	--input "${sampler_rds}" \
-	--output "${output_dir}/${sampler_rds%.rds}_chain_${task_id}.json.gz" \
+	--output "${sampler_rds%.rds}_chain_${task_id}.json.gz" \
 	--samples "${n_samples}" \
 	--chains "${task_id}" \
 	--transient "${n_transients}" \
