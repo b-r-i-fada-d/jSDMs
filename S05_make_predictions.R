@@ -29,7 +29,7 @@ nParallel <- 4
 #grid <- grid %>% dplyr::select(-geometry)
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
-grid <- grid %>% filter(year == 2022)
+grid <- grid %>% filter(year == 2021)
 
 XData <- data.frame(#station = as.factor(grid$station),
   year = as.factor(grid$year), 
@@ -49,10 +49,10 @@ xy <- unique(xy)
 
 #23.09.25 - changed studydesign. removed year & changed station to xy
 
-studyDesign <- data.frame(station = as.factor(grid$station),
+studyDesign <- data.frame(station = as.factor(grid$station))#,
                           #year = as.factor(grid$year), 
                           #station = xy,
-                          stringsAsFactors = TRUE)
+                          # stringsAsFactors = TRUE)
 
 
 
@@ -61,8 +61,8 @@ studyDesign <- data.frame(station = as.factor(grid$station),
 # 
 # xy <- unique(xy)
 
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-ranLevels = rL.station#[["pi"]]
+rL.station = HmscRandomLevel(sData = xy) #, sMethod = "NNGP") #25/09 remove nngp
+ranLevels = list(station = rL.station)
 # rL.year = HmscRandomLevel(units = levels(studyDesign$year)) #23.09 remove year rL
 
 # ranLevels = list(station = rL.station,
@@ -179,15 +179,13 @@ predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
                  ranLevels = ranLevels,
-                 # ranLevels = list(station = rL.station), # remove listed rL
-                                 # year = rL.year), #23.09 remove year rL
                  predictEtaMean = TRUE,
                  expected = TRUE
 )
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_noyr/predictions_noyr.RData"))
+save(EpredY, file = file.path("results_nonngp/predictions_nonngp.RData"))
 #############################################################################
 
 # 
