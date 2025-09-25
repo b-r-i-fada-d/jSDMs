@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#SBATCH --jobname=HMSC-HPC.Run
+#SBATCH --job-name=HMSC-HPC.Run
 #SBATCH --cpus-per-task=4
-#SBATCH --mem-per-cpu=32G
+#SBATCH --mem-per-cpu=4G
 #SBATCH --gpus-per-node=1
 #SBATCH --time=01:00:00
 #SBATCH --partition=gpu
-#SBATCH --output=%x.%j.%a.out
-#SBATCH --error=%x.%j.%a.err
+#SBATCH --output=%x.%A.%a.out
+#SBATCH --error=%x.%A.%a.err
 
 
 set -euo pipefail
@@ -29,7 +29,7 @@ help () {
 	EOF
 }
 
-verbosity=0
+verbosity=1
 
 while getopts ":g:o:s:t:r:v:h" arg; do
 	case "${arg}" in
@@ -70,12 +70,13 @@ done
 
 if [ ${OPTIND} -eq 1 ]; then help; exit 0; fi
 
-task_id="${SLURM_ARRAY_TASK_ID:-1}"
+task_id="${SLURM_ARRAY_TASK_ID:-0}"
 
 python -m hmsc.run_gibbs_sampler \
 	--input "${sampler_rds}" \
 	--output "${output_dir}/${sampler_rds%.rds}_chain_${task_id}.json.gz" \
 	--samples "${n_samples}" \
+	--chains "${task_id}" \
 	--transient "${n_transients}" \
 	--thin "${n_thins}" \
 	--verbose "${verbosity}"
