@@ -65,16 +65,16 @@ xy <- unique(xy)
 
 # --- Study design
 
-studyDesign <- data.frame(#station = as.factor(df$station) #, 
-                         year = as.factor(df$year) 
+studyDesign <- data.frame(station = as.factor(df$station) #, 
+                         # year = as.factor(df$year) 
                          )
 
 # --- Random effect structure (hierarchical study design)
 
-# rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-rL.year = HmscRandomLevel(units = df$year) #25.09 add back year rL
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+# rL.year = HmscRandomLevel(units = df$year) #25.09 add back year rL
 
-ranLevels = list(year = rL.year)
+ranLevels = list(station = rL.station)
 
 
 # --- Regression model for environmental covariates
