@@ -91,7 +91,6 @@ if (arguments$model_type == "full"){
                studyDesign = studyDesign,
                ranLevels = ranLevels
                )
-  )
 } else if (arguments$model_type == "environmental"){
   model = Hmsc(Y = Y, XData = XData, 
                XFormula = XFormula,
@@ -111,8 +110,7 @@ if (arguments$model_type == "full"){
 
 # Run model
 sampler = sampleMcmc(model,
-                     # initPar = "fixed effects",
-                     engine="HPC",
+                     engine = "HPC",
                      thin = arguments$n_thins, 
                      samples = arguments$n_samples, 
                      transient = arguments$n_transients,
