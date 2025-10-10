@@ -65,16 +65,16 @@ xy <- unique(xy)
 
 #### --- Design model --- ####
 
-# --- Study design
-
-studyDesign <- data.frame(station = as.factor(df$station) #, 
-                         # year = as.factor(df$year) 
-                         )
-
-# --- Random effect structure (hierarchical study design)
-
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-ranLevels = list(station = rL.station)
+# # --- Study design
+# 
+# studyDesign <- data.frame(station = as.factor(df$station) #, 
+#                          # year = as.factor(df$year) 
+#                          )
+# 
+# # --- Random effect structure (hierarchical study design)
+# 
+# rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+# ranLevels = list(station = rL.station)
 
                              
 # rL.year = HmscRandomLevel(units = df$year) #25.09 add back year rL
@@ -89,8 +89,8 @@ if (arguments$model_type == "full"){
   model = Hmsc(Y = Y, XData = XData,
                XFormula = XFormula,
                distr = "probit", # because PA
-               studyDesign = studyDesign, #25.09 add back  rLs
-               ranLevels = ranLevels 
+             #  studyDesign = studyDesign, #25.09 add back  rLs
+              # ranLevels = ranLevels 
                #,
                # ranLevels = list(station = rL.station,
                #  year = rL.year #HMSC-HPC.Prep.3599687.err)
