@@ -175,10 +175,10 @@ ranLevels = list(station = rL.station)
 #############################################################################
 # # TRY THIS 24.09.2025 - it worked but there was a typo while saving
 #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-predY <- predict(model,
+predY <- predict.Hmsc(model, # 10.10.25 adding in Hmsc
                  XData = XData,
                  studyDesign = studyDesign,
-                 ranLevels = ranLevels,
+                 ranLevels = ranLevels, 
                  predictEtaMean = TRUE,
                  expected = TRUE
 )
