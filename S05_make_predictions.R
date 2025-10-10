@@ -175,7 +175,7 @@ ranLevels = list(station = rL.station)
 #############################################################################
 # # TRY THIS 24.09.2025 - it worked but there was a typo while saving
 #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-predY <- Hmsc::predict(model, # 10.10.25 adding in Hmsc
+predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
                  ranLevels = ranLevels, 
@@ -185,7 +185,7 @@ predY <- Hmsc::predict(model, # 10.10.25 adding in Hmsc
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_nonngp/predictions_nonngp.RData"))
+save(EpredY, file = file.path("results_rL_sp/predictions_rL_sp.RData"))
 #############################################################################
 
 # 
