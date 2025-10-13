@@ -35,7 +35,7 @@ XData <- data.frame(year = as.factor(grid$year),
                     temp = grid$temp,
                     ph = grid$ph,
                     depth = grid$depth)
-rownames(XData) <- c(1:nrow(XData))
+# rownames(XData) <- c(1:nrow(XData))
 
 xy = as.matrix(cbind(grid$lon, grid$lat))
 rownames(xy) = as.character(grid$station)
@@ -47,8 +47,8 @@ xy <- unique(xy)
 #### --- 13.10.2025 - try with gradient --- ####
 
 Gradient = prepareGradient(model, 
-                           XDataNew = XData, 
-                           sDataNew = list(station = xy))
+                           XData = XData, 
+                           sData = list(station = xy))
 
 predY <- Hmsc:::predict.Hmsc(model, 
                              XData = XData,
