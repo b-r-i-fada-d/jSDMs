@@ -8,7 +8,7 @@
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
-source("argument_parser.R")
+source("argument_parser.R") 
 parser <- build.s03.argparser()
 arguments <- parser$parse_args()
 
@@ -44,20 +44,21 @@ xy <- unique(xy)
 
 
 ################################################################
-# 13.10.2025 adding year rL
+# 13.10.2025 adding spatial & year rLs
 
 #23.09.25 - changed studydesign. removed year & changed station to xy
 
-studyDesign <- data.frame(#station = as.factor(grid$station), 
+studyDesign <- data.frame(station = as.factor(grid$station), 
                           #station = xy,
                           year = as.factor(grid$year),
                           stringsAsFactors = TRUE)
 
-# rL.station = HmscRandomLevel(sData = xy) #, sMethod = "NNGP") #25/09 remove nngp
+
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 # ranLevels = list(station = rL.station)
 rL.year = HmscRandomLevel(units = levels(studyDesign$year))
 
-ranLevels = list(#station = rL.station,
+ranLevels = list(station = rL.station,
                  year = rL.year)
 
 
@@ -160,14 +161,14 @@ ranLevels = list(#station = rL.station,
 predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
-                 ranLevels = ranLevels, 
-                 predictEtaMean = TRUE,
-                 expected = TRUE
+                 ranLevels = ranLevels#, 
+                 # predictEtaMean = TRUE, # 13.10 commented out
+                 # expected = TRUE # 13.10 commented out
 )
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_year_randomlevel/predictions_year_randomlevel.RData"))
+save(EpredY, file = file.path("results_spatiotemporal_randomlevels/predictions_spatiotemporal_randomlevels.RData"))
 #############################################################################
 
 # 
