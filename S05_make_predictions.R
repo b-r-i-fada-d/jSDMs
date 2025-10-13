@@ -51,7 +51,7 @@ Gradient = prepareGradient(model,
                            sDataNew = list(station = xy))
 
 predY <- Hmsc:::predict.Hmsc(model, 
-                             XData = Xdata,
+                             XData = XData,
                              Gradient = Gradient,
                              expected = T, 
                              predictEtaMean = T)
