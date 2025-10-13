@@ -185,7 +185,7 @@ predY <- predict(model,
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_rL_sp/predictions_rL_sp.RData"))
+save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel.RData"))
 #############################################################################
 
 # 
