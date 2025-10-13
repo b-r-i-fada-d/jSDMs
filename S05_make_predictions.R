@@ -3,7 +3,7 @@
 #SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=01:00:00
+#SBATCH --time=03:00:00
 #SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -44,28 +44,21 @@ xy <- unique(xy)
 
 
 ################################################################
-#13.10.2025 no rLs or study design
+# 13.10.2025 adding year rL
 
 #23.09.25 - changed studydesign. removed year & changed station to xy
 
-# studyDesign <- data.frame(station = as.factor(grid$station))#,
-                          #year = as.factor(grid$year), 
+studyDesign <- data.frame(#station = as.factor(grid$station), 
                           #station = xy,
-                          # stringsAsFactors = TRUE)
-
-
-
-# xy = as.matrix(cbind(as.factor(grid$lon),
-#                      as.factor(grid$lat)))
-# 
-# xy <- unique(xy)
+                          year = as.factor(grid$year),
+                          stringsAsFactors = TRUE)
 
 # rL.station = HmscRandomLevel(sData = xy) #, sMethod = "NNGP") #25/09 remove nngp
 # ranLevels = list(station = rL.station)
-# rL.year = HmscRandomLevel(units = levels(studyDesign$year)) #23.09 remove year rL
+rL.year = HmscRandomLevel(units = levels(studyDesign$year))
 
-# ranLevels = list(station = rL.station,
-#                  year = rL.year)
+ranLevels = list(#station = rL.station,
+                 year = rL.year)
 
 
 ################################################################
@@ -166,15 +159,15 @@ xy <- unique(xy)
 #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
 predY <- predict(model,
                  XData = XData,
-                 # studyDesign = studyDesign,
-                 # ranLevels = ranLevels, 
+                 studyDesign = studyDesign,
+                 ranLevels = ranLevels, 
                  predictEtaMean = TRUE,
                  expected = TRUE
 )
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_basic/predictions_basic.RData"))
+save(EpredY, file = file.path("results_year_randomlevel/predictions_year_randomlevel.RData"))
 #############################################################################
 
 # 
