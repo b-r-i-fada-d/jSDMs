@@ -3,7 +3,7 @@
 #SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=03:00:00
+#SBATCH --time=24:00:00
 #SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -27,7 +27,7 @@ output_prefix <- "model"
 grid <- grid %>% drop_na()
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
-grid <- grid %>% filter(year >= 2018)
+grid <- grid %>% filter(year >= 2022)
 
 XData <- data.frame(year = as.factor(grid$year),
                     month = as.factor(grid$month),
@@ -300,7 +300,7 @@ predict_batch <- function(i) {
   #   predictEtaMean = TRUE
   # )
   
-  predY.batch <- Hmsc:::predict.Hmsc(model, 
+  predY.batch <- Hmsc::predict.Hmsc(model,  # removed one :
                                XData = XData[idx, , drop = FALSE],
                                Gradient = Gradient,
                                expected = T, 
