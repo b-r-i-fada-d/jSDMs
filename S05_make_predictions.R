@@ -218,7 +218,7 @@ cat("Elapsed time:", end_time - start_time, "\n")
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_spatiotemporal_randomlevels/predictions_spatiotemporal_randomlevels.RData"))
+save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel.RData"))
 # #############################################################################
 
 # 
