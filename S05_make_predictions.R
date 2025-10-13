@@ -70,13 +70,11 @@ Gradient = prepareGradient(model,
                            XData = XData, 
                            sData = list(station = xy))
 
-# predY <- Hmsc:::predict.Hmsc(model, 
-#                              XData = XData,
-#                              Gradient = Gradient,
-#                              expected = T, 
-#                              predictEtaMean = T)
-# 
-
+predY <- Hmsc:::predict.Hmsc(model,
+                             XData = XData,
+                             Gradient = Gradient,
+                             expected = T,
+                             predictEtaMean = T)
 
 
 ################################################################
@@ -279,59 +277,59 @@ Gradient = prepareGradient(model,
 # cat("Saved predictions to results/predictions_noyr.RData\n")
 
 
-# #### --- Batching --- ####
-
-batch_size <- 1000
-n_cores <- 4
-n_sites <- nrow(XData)
-batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
-
-predict_batch <- function(i) {
-  idx <- batches[[i]]
-
-  cat("Running batch", i, "of", length(batches), "\n")
-
-  # predY.batch <- predict(
-  #   object = model,
-  #   XData = XData[idx, , drop = FALSE],
-  #   studyDesign = studyDesign[idx, , drop = FALSE],
-  #   ranLevels = ranLevels,
-  #   expected = TRUE,
-  #   predictEtaMean = TRUE
-  # )
-  
-  predY.batch <- Hmsc::predict.Hmsc(model,  # removed one :
-                               XData = XData[idx, , drop = FALSE],
-                               Gradient = Gradient,
-                               expected = T, 
-                               predictEtaMean = T)
-
-  EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
-
-  batchDF <- data.frame(
-    site = idx,
-    lon = grid$lon[idx],
-    lat = grid$lat[idx],
-    EpredY.batch
-  )
-
-  save(batchDF, file = paste0("results_spatiotemporal_randomlevels/predictions_batch_", i, ".RData"))
-  return(NULL)
-}
-
-mclapply(seq_along(batches), predict_batch, mc.cores = n_cores)
-cat("All batches submitted.\n")
-
-files <- list.files("results_spatiotemporal_randomlevels", pattern = "predictions_batch_.*\\.RData", full.names = TRUE)
-
-batch_list <- lapply(files, function(f) {
-  load(f)  # loads batchDF
-  batchDF
-})
-
-mapData <- do.call(rbind, batch_list)
-mapData <- mapData[order(mapData$site), ]
-mapData$site <- NULL
-
-save(mapData, file = "results_spatiotemporal_randomlevels/predictions_grid_combined.RData")
-
+# # #### --- Batching --- ####
+# 
+# batch_size <- 1000
+# n_cores <- 4
+# n_sites <- nrow(XData)
+# batches <- split(1:n_sites, ceiling(seq_along(1:n_sites)/batch_size))
+# 
+# predict_batch <- function(i) {
+#   idx <- batches[[i]]
+# 
+#   cat("Running batch", i, "of", length(batches), "\n")
+# 
+#   # predY.batch <- predict(
+#   #   object = model,
+#   #   XData = XData[idx, , drop = FALSE],
+#   #   studyDesign = studyDesign[idx, , drop = FALSE],
+#   #   ranLevels = ranLevels,
+#   #   expected = TRUE,
+#   #   predictEtaMean = TRUE
+#   # )
+#   
+#   predY.batch <- Hmsc::predict.Hmsc(model,  # removed one :
+#                                XData = XData[idx, , drop = FALSE],
+#                                Gradient = Gradient,
+#                                expected = T, 
+#                                predictEtaMean = T)
+# 
+#   EpredY.batch <- Reduce("+", predY.batch) / length(predY.batch)
+# 
+#   batchDF <- data.frame(
+#     site = idx,
+#     lon = grid$lon[idx],
+#     lat = grid$lat[idx],
+#     EpredY.batch
+#   )
+# 
+#   save(batchDF, file = paste0("results_spatiotemporal_randomlevels/predictions_batch_", i, ".RData"))
+#   return(NULL)
+# }
+# 
+# mclapply(seq_along(batches), predict_batch, mc.cores = n_cores)
+# cat("All batches submitted.\n")
+# 
+# files <- list.files("results_spatiotemporal_randomlevels", pattern = "predictions_batch_.*\\.RData", full.names = TRUE)
+# 
+# batch_list <- lapply(files, function(f) {
+#   load(f)  # loads batchDF
+#   batchDF
+# })
+# 
+# mapData <- do.call(rbind, batch_list)
+# mapData <- mapData[order(mapData$site), ]
+# mapData$site <- NULL
+# 
+# save(mapData, file = "results_spatiotemporal_randomlevels/predictions_grid_combined.RData")
+# 
