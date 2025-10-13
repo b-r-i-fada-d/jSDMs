@@ -26,20 +26,15 @@ grid <- grid %>% drop_na()
 
 nParallel <- 4
 
-#grid <- grid %>% dplyr::select(-geometry)
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
-
 grid <- grid %>% filter(year == 2021)
 
-XData <- data.frame(#station = as.factor(grid$station),
-  year = as.factor(grid$year), 
-  month = as.factor(grid$month),
-  # lon = as.factor(grid$lon), 
-  # lat = as.factor(grid$lat),
-  o2 = grid$o2, 
-  temp = grid$temp,
-  ph = grid$ph, 
-  depth = grid$depth)
+XData <- data.frame(year = as.factor(grid$year),
+                    month = as.factor(grid$month),
+                    o2 = grid$o2,
+                    temp = grid$temp,
+                    ph = grid$ph,
+                    depth = grid$depth)
 rownames(XData) <- c(1:nrow(XData))
 
 xy = as.matrix(cbind(grid$lon, grid$lat))
@@ -47,9 +42,13 @@ rownames(xy) = as.character(grid$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 xy <- unique(xy)
 
+
+################################################################
+#13.10.2025 no rLs or study design
+
 #23.09.25 - changed studydesign. removed year & changed station to xy
 
-studyDesign <- data.frame(station = as.factor(grid$station))#,
+# studyDesign <- data.frame(station = as.factor(grid$station))#,
                           #year = as.factor(grid$year), 
                           #station = xy,
                           # stringsAsFactors = TRUE)
@@ -61,27 +60,17 @@ studyDesign <- data.frame(station = as.factor(grid$station))#,
 # 
 # xy <- unique(xy)
 
-rL.station = HmscRandomLevel(sData = xy) #, sMethod = "NNGP") #25/09 remove nngp
-ranLevels = list(station = rL.station)
+# rL.station = HmscRandomLevel(sData = xy) #, sMethod = "NNGP") #25/09 remove nngp
+# ranLevels = list(station = rL.station)
 # rL.year = HmscRandomLevel(units = levels(studyDesign$year)) #23.09 remove year rL
 
 # ranLevels = list(station = rL.station,
 #                  year = rL.year)
 
 
+################################################################
 
 
-
-
-# XData.grid <- data.frame(ph = grid$ph, 
-#                          depth = grid$depth,
-#                          o2 = grid$o2,
-#                          temp = grid$temp,
-#                          month = grid$month,
-#                          year = grid$year,
-#                          station = grid$station,
-#                          stringsAsFactors = TRUE
-# )
 # 
 # studyDesign.grid <- data.frame(
 #   site = as.factor(1:nrow(XData.grid))
@@ -177,15 +166,15 @@ ranLevels = list(station = rL.station)
 #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
 predY <- predict(model,
                  XData = XData,
-                 studyDesign = studyDesign,
-                 ranLevels = ranLevels, 
+                 # studyDesign = studyDesign,
+                 # ranLevels = ranLevels, 
                  predictEtaMean = TRUE,
                  expected = TRUE
 )
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel.RData"))
+save(EpredY, file = file.path("results_basic/predictions_basic.RData"))
 #############################################################################
 
 # 
