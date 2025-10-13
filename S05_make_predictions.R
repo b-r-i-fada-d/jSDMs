@@ -29,6 +29,8 @@ grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
 grid <- grid %>% filter(year >= 2022)
 
+grid <- grid %>% sample_n(10) # testing small subset
+
 XData <- data.frame(year = as.factor(grid$year),
                     month = as.factor(grid$month),
                     o2 = grid$o2,
@@ -70,11 +72,18 @@ Gradient = prepareGradient(model,
                            XData = XData, 
                            sData = list(station = xy))
 
+start_time <- Sys.time()
+cat("Start time:", start_time, "\n")
+
 predY <- Hmsc:::predict.Hmsc(model,
                              XData = XData,
                              Gradient = Gradient,
                              expected = T,
                              predictEtaMean = T)
+
+end_time <- Sys.time()
+cat("End time:", end_time, "\n")
+cat("Elapsed time:", end_time - start_time, "\n")
 
 
 ################################################################
@@ -205,10 +214,10 @@ predY <- Hmsc:::predict.Hmsc(model,
 # )
 
 #############################################################################
-# 
-# EpredY <- Reduce("+", predY) / length(predY)
-# 
-# save(EpredY, file = file.path("results_spatiotemporal_randomlevels/predictions_spatiotemporal_randomlevels.RData"))
+
+EpredY <- Reduce("+", predY) / length(predY)
+
+save(EpredY, file = file.path("results_spatiotemporal_randomlevels/predictions_spatiotemporal_randomlevels.RData"))
 # #############################################################################
 
 # 
