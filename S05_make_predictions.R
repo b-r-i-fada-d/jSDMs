@@ -17,17 +17,15 @@ library(tidyverse)
 library(ggplot2)
 library(parallel)
 
+nParallel <- 4
+
 # Read environmental data
 grid <- read_csv(arguments$env_data)
 model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
 output_prefix <- "model"
 
 grid <- grid %>% drop_na()
-
-nParallel <- 4
-
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
-grid <- grid %>% filter(year == 2021)
 
 XData <- data.frame(year = as.factor(grid$year),
                     month = as.factor(grid$month),
@@ -35,12 +33,32 @@ XData <- data.frame(year = as.factor(grid$year),
                     temp = grid$temp,
                     ph = grid$ph,
                     depth = grid$depth)
-# rownames(XData) <- c(1:nrow(XData))
 
 xy = as.matrix(cbind(grid$lon, grid$lat))
 rownames(xy) = as.character(grid$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
-xy <- unique(xy)
+# xy <- unique(xy) 
+
+
+##########################################################################
+#### --- 13.10.2025 - trying all years --- ####
+# # grid <- grid %>% filter(year == 2021)
+# 
+# grid1 <- grid
+# grid1 <- grid1 %>% filter(month == 11)
+# 
+# XData <- data.frame(year = as.factor(grid1$year),
+#                     month = as.factor(grid1$month),
+#                     o2 = grid1$o2,
+#                     temp = grid1$temp,
+#                     ph = grid1$ph,
+#                     depth = grid1$depth)
+# # rownames(XData) <- c(1:nrow(XData))
+# 
+# xy = as.matrix(cbind(grid1$lon, grid1$lat))
+# rownames(xy) = as.character(grid1$station)
+# colnames(xy) = c("x-coordinate", "y-coordinate")
+# xy <- unique(xy)
 
 
 ##########################################################################
