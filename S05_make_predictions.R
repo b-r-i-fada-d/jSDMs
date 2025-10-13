@@ -79,7 +79,8 @@ predY <- Hmsc:::predict.Hmsc(model,
                              XData = XData,
                              Gradient = Gradient,
                              expected = T,
-                             predictEtaMean = T)
+                             predictEtaMean = T,
+                             thin = 10)
 
 end_time <- Sys.time()
 cat("End time:", end_time, "\n")
