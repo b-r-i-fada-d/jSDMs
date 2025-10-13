@@ -43,23 +43,37 @@ colnames(xy) = c("x-coordinate", "y-coordinate")
 xy <- unique(xy)
 
 
+##########################################################################
+#### --- 13.10.2025 - try with gradient --- ####
+
+Gradient = prepareGradient(model, 
+                           XDataNew = XData, 
+                           sDataNew = list(station = xy))
+
+predY <- Hmsc:::predict.Hmsc(model, 
+                             XData = Xdata,
+                             Gradient = Gradient,
+                             expected = T, 
+                             predictEtaMean = T)
+
+
+
+
 ################################################################
-# 13.10.2025 adding spatial & year rLs
-
-#23.09.25 - changed studydesign. removed year & changed station to xy
-
-studyDesign <- data.frame(station = as.factor(grid$station), 
-                          #station = xy,
-                          year = as.factor(grid$year),
-                          stringsAsFactors = TRUE)
-
-
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-# ranLevels = list(station = rL.station)
-rL.year = HmscRandomLevel(units = levels(studyDesign$year))
-
-ranLevels = list(station = rL.station,
-                 year = rL.year)
+# 13.10.2025 commenting out to try with grandient
+# 13.10.2025 adding spatial & year rLs 
+# studyDesign <- data.frame(station = as.factor(grid$station), 
+#                           #station = xy,
+#                           year = as.factor(grid$year),
+#                           stringsAsFactors = TRUE)
+# 
+# 
+# rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+# # ranLevels = list(station = rL.station)
+# rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+# 
+# ranLevels = list(station = rL.station,
+#                  year = rL.year)
 
 
 ################################################################
@@ -158,13 +172,21 @@ ranLevels = list(station = rL.station,
 #############################################################################
 # # TRY THIS 24.09.2025 - it worked but there was a typo while saving
 #predY = predict(model, predictEtaMean = TRUE, expected = TRUE) # old
-predY <- predict(model,
-                 XData = XData,
-                 studyDesign = studyDesign,
-                 ranLevels = ranLevels#, 
-                 # predictEtaMean = TRUE, # 13.10 commented out
-                 # expected = TRUE # 13.10 commented out
-)
+
+
+#############################################################################
+
+# 13.10.2025 commenting out to try with grandient
+
+# predY <- predict(model,
+#                  XData = XData,
+#                  studyDesign = studyDesign,
+#                  ranLevels = ranLevels#, 
+#                  # predictEtaMean = TRUE, # 13.10 commented out
+#                  # expected = TRUE # 13.10 commented out
+# )
+
+#############################################################################
 
 EpredY <- Reduce("+", predY) / length(predY)
 
