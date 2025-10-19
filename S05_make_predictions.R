@@ -17,7 +17,7 @@ library(tidyverse)
 library(ggplot2)
 library(parallel)
 
-nParallel <- 4
+nParallel <- 40
 
 # Read environmental data
 grid <- read_csv(arguments$env_data)
@@ -28,23 +28,25 @@ grid <- grid %>% drop_na()
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
 grid <- grid %>% filter(year >= 2021)
-grid <- grid %>% filter(month == 12)
+grid <- grid %>% filter(month == 11)
 grid <- grid %>%
   distinct(station, .keep_all = TRUE)
 
+grid <- grid[sample(nrow(grid), 2), ]
 
-XData <- data.frame(station = as.factor(grid$station), #19.10.25 added in
-                    lat = as.factor(grid$lat),
-                    lon = as.factor(grid$lon),
-                    year = as.factor(grid$year),
-                    month = as.factor(grid$month),
-                    o2 = grid$o2,
-                    temp = grid$temp,
-                    ph = grid$ph,
-                    depth = grid$depth)
 
-xy = as.matrix(cbind(XData$lon, XData$lat))
-rownames(xy) = as.character(XData$station)
+# XData <- data.frame(station = as.factor(grid$station), #19.10.25 added in
+#                     lat = as.factor(grid$lat),
+#                     lon = as.factor(grid$lon),
+#                     year = as.factor(grid$year),
+#                     month = as.factor(grid$month),
+#                     o2 = grid$o2,
+#                     temp = grid$temp,
+#                     ph = grid$ph,
+#                     depth = grid$depth)
+
+xy = as.matrix(cbind(grid$lon, grid$lat))
+rownames(xy) = as.character(grid$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 # xy <- unique(xy) 
 
@@ -56,13 +58,14 @@ colnames(xy) = c("x-coordinate", "y-coordinate")
 # grid1 <- grid
 # grid1 <- grid1 %>% filter(month == 11)
 # 
-# XData <- data.frame(year = as.factor(grid1$year),
-#                     month = as.factor(grid1$month),
-#                     o2 = grid1$o2,
-#                     temp = grid1$temp,
-#                     ph = grid1$ph,
-#                     depth = grid1$depth)
-# # rownames(XData) <- c(1:nrow(XData))
+XData.grid <- data.frame(year = as.factor(grid$year),
+                    month = as.factor(grid$month),
+                    o2 = grid$o2,
+                    temp = grid$temp,
+                    ph = grid$ph,
+                    depth = grid$depth,
+                    stringsAsFactors = TRUE)
+# rownames(XData) <- c(1:nrow(XData))
 # 
 # xy = as.matrix(cbind(grid1$lon, grid1$lat))
 # rownames(xy) = as.character(grid1$station)
@@ -74,47 +77,56 @@ colnames(xy) = c("x-coordinate", "y-coordinate")
 # #### --- 13.10.2025 - try with gradient --- ####
 # # --- 19.10.25 removing gradient
 # # - gradient work sbut prediction takes too long
-# 
-# Gradient = prepareGradient(model, 
-#                            XData = XData, 
-#                            sData = list(station = xy))
-# 
-# start_time <- Sys.time()
-# cat("Start time:", start_time, "\n")
-# 
+# We next use the prepareGradient function to convert the environmental and spatial
+# predictors into a format that can be used as input for the predict function
+
+Gradient = prepareGradient(model, 
+                           XDataNew = XData.grid, 
+                           sDataNew = list(station = xy))
+
+# We are now ready to compute the posterior predictive distribution (takes a minute to compute it)
+start_time <- Sys.time()
+cat("Start time:", start_time, "\n")
+
+predY = predict(model, 
+                Gradient = Gradient, 
+                predictEtaMean = TRUE,
+                expected = TRUE, 
+                nParallel=nParallel)
+
 # predY <- Hmsc:::predict.Hmsc(model,
 #                              XData = XData,
 #                              Gradient = Gradient,
 #                              expected = T,
 #                              predictEtaMean = T,
 #                              thin = 10)
-# 
-# end_time <- Sys.time()
-# cat("End time:", end_time, "\n")
-# cat("Elapsed time:", end_time - start_time, "\n")
+
+end_time <- Sys.time()
+cat("End time:", end_time, "\n")
+cat("Elapsed time:", end_time - start_time, "\n")
 
 
 ################################################################
-# #13.10.2025 commenting out to try with gradient
-# #19.10.25 adding back in, removing gradientm removing year
-# #13.10.2025 adding spatial & year rLs
-studyDesign <- data.frame(station = as.factor(XData$station),
-                          #station = xy,
-                          # year = as.factor(grid$year),
-                          stringsAsFactors = TRUE)
-
-
-rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-# ranLevels = list(station = rL.station)
-#rL.year = HmscRandomLevel(units = levels(studyDesign$year))
-
-
-rownames(rL.station$s) <- XData$station #19.10.25
-
-
-ranLevels = list(station = rL.station#,
-                 #year = rL.year
-)
+# # #13.10.2025 commenting out to try with gradient
+# # #19.10.25 adding back in, removing gradientm removing year
+# # #13.10.2025 adding spatial & year rLs
+# studyDesign <- data.frame(station = as.factor(XData$station),
+#                           #station = xy,
+#                           # year = as.factor(grid$year),
+#                           stringsAsFactors = TRUE)
+# 
+# 
+# rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+# # ranLevels = list(station = rL.station)
+# #rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+# 
+# 
+# rownames(rL.station$s) <- XData$station #19.10.25
+# 
+# 
+# ranLevels = list(station = rL.station#,
+#                  #year = rL.year
+# )
 
 ################################################################
 
@@ -218,14 +230,14 @@ ranLevels = list(station = rL.station#,
 
 # 13.10.2025 commenting out to try with grandient
 # 19.10.25 trying without gradient
-predY <- Hmsc:::predict.Hmsc(model,
-                 # post = poolMcmcChains(model$postList),
-                 XData = XData,
-                 studyDesign = studyDesign,
-                 ranLevels = ranLevels,
-                 predictEtaMean = TRUE, 
-                 expected = TRUE
-)
+# predY <- Hmsc:::predict.Hmsc(model,
+#                  # post = poolMcmcChains(model$postList),
+#                  XData = XData,
+#                  studyDesign = studyDesign,
+#                  ranLevels = ranLevels,
+#                  predictEtaMean = TRUE, 
+#                  expected = TRUE
+# )
 
 #############################################################################
 
