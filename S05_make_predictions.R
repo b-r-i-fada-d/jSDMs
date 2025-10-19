@@ -219,11 +219,12 @@ ranLevels = list(station = rL.station#,
 # 13.10.2025 commenting out to try with grandient
 # 19.10.25 trying without gradient
 predY <- predict(model,
+                 post = poolMcmcChains(model$postList),
                  XData = XData,
                  studyDesign = studyDesign,
                  ranLevels = rL.station,
-                 predictEtaMean = TRUE, 
-                 expected = TRUE
+                 predictEtaMean = FALSE, 
+                 expected = FALSE
 )
 
 #############################################################################
