@@ -94,7 +94,7 @@ colnames(xy) = c("x-coordinate", "y-coordinate")
 #13.10.2025 commenting out to try with gradient
 #19.10.25 adding back in, removing gradientm removing year
 #13.10.2025 adding spatial & year rLs
-studyDesign <- data.frame(station = as.factor(grid$station),
+studyDesign <- data.frame(station = as.factor(XData$station),
                           #station = xy,
                           # year = as.factor(grid$year),
                           stringsAsFactors = TRUE)
