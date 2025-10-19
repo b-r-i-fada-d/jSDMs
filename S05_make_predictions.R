@@ -221,8 +221,8 @@ ranLevels = list(station = rL.station#,
 predY <- predict(model,
                  post = poolMcmcChains(model$postList),
                  XData = XData,
-                 studyDesign = studyDesign,
-                 ranLevels = rL.station,
+                 studyDesign = NULL,
+                 ranLevels = NULL,
                  predictEtaMean = FALSE, 
                  expected = FALSE
 )
