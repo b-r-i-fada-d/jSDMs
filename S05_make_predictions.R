@@ -31,7 +31,9 @@ grid <- grid %>% filter(year >= 2022)
 
 grid <- grid %>% sample_n(10) # testing small subset
 
-XData <- data.frame(station = as.factor(grid$station), #19.10.25
+XData <- data.frame(station = as.factor(grid$station), #19.10.25 added in
+                    lat = as.factor(grid$lat),
+                    lon = as.factor(grid$lon),
                     year = as.factor(grid$year),
                     month = as.factor(grid$month),
                     o2 = grid$o2,
@@ -104,10 +106,13 @@ rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 # ranLevels = list(station = rL.station)
 #rL.year = HmscRandomLevel(units = levels(studyDesign$year))
 
+
+rownames(rL.station$s) <- XData$station #19.10.25
+
+
 ranLevels = list(station = rL.station#,
                  #year = rL.year
-                 )
-
+)
 
 ################################################################
 
