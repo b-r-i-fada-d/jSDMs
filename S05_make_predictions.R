@@ -28,8 +28,10 @@ grid <- grid %>% drop_na()
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
 grid <- grid %>% filter(year >= 2021)
+grid <- grid %>% filter(month == 12)
+grid <- grid %>%
+  distinct(station, .keep_all = TRUE)
 
-grid <- grid %>% sample_n(10) # testing small subset
 
 XData <- data.frame(station = as.factor(grid$station), #19.10.25 added in
                     lat = as.factor(grid$lat),
@@ -107,7 +109,7 @@ rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 #rL.year = HmscRandomLevel(units = levels(studyDesign$year))
 
 
-# rownames(rL.station$s) <- XData$station #19.10.25
+rownames(rL.station$s) <- XData$station #19.10.25
 
 
 ranLevels = list(station = rL.station#,
