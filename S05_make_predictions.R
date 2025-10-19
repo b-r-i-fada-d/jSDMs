@@ -218,7 +218,7 @@ ranLevels = list(station = rL.station#,
 
 # 13.10.2025 commenting out to try with grandient
 # 19.10.25 trying without gradient
-predY <- predict(model,
+predY <- predict.Hmsc(model,
                  XData = XData,
                  studyDesign = studyDesign,
                  ranLevels = ranLevels#,
