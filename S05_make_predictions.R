@@ -218,12 +218,12 @@ ranLevels = list(station = rL.station#,
 
 # 13.10.2025 commenting out to try with grandient
 # 19.10.25 trying without gradient
-predY <- Hmsc:::predict(model,
+predY <- predict(model,
                  XData = XData,
                  studyDesign = studyDesign,
-                 ranLevels = ranLevels#,
-                 # predictEtaMean = TRUE, # 13.10 commented out
-                 # expected = TRUE # 13.10 commented out
+                 ranLevels = rL.station,
+                 predictEtaMean = TRUE, 
+                 expected = TRUE
 )
 
 #############################################################################
