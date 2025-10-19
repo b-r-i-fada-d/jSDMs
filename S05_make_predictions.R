@@ -31,7 +31,8 @@ grid <- grid %>% filter(year >= 2022)
 
 grid <- grid %>% sample_n(10) # testing small subset
 
-XData <- data.frame(year = as.factor(grid$year),
+XData <- data.frame(station = as.factor(grid$station), #19.10.25
+                    year = as.factor(grid$year),
                     month = as.factor(grid$month),
                     o2 = grid$o2,
                     temp = grid$temp,
@@ -66,42 +67,45 @@ colnames(xy) = c("x-coordinate", "y-coordinate")
 
 
 ##########################################################################
-#### --- 13.10.2025 - try with gradient --- ####
-
-Gradient = prepareGradient(model, 
-                           XData = XData, 
-                           sData = list(station = xy))
-
-start_time <- Sys.time()
-cat("Start time:", start_time, "\n")
-
-predY <- Hmsc:::predict.Hmsc(model,
-                             XData = XData,
-                             Gradient = Gradient,
-                             expected = T,
-                             predictEtaMean = T,
-                             thin = 10)
-
-end_time <- Sys.time()
-cat("End time:", end_time, "\n")
-cat("Elapsed time:", end_time - start_time, "\n")
+# #### --- 13.10.2025 - try with gradient --- ####
+# # --- 19.10.25 removing gradient
+# # - gradient work sbut prediction takes too long
+# 
+# Gradient = prepareGradient(model, 
+#                            XData = XData, 
+#                            sData = list(station = xy))
+# 
+# start_time <- Sys.time()
+# cat("Start time:", start_time, "\n")
+# 
+# predY <- Hmsc:::predict.Hmsc(model,
+#                              XData = XData,
+#                              Gradient = Gradient,
+#                              expected = T,
+#                              predictEtaMean = T,
+#                              thin = 10)
+# 
+# end_time <- Sys.time()
+# cat("End time:", end_time, "\n")
+# cat("Elapsed time:", end_time - start_time, "\n")
 
 
 ################################################################
-# 13.10.2025 commenting out to try with grandient
-# 13.10.2025 adding spatial & year rLs 
-# studyDesign <- data.frame(station = as.factor(grid$station), 
-#                           #station = xy,
-#                           year = as.factor(grid$year),
-#                           stringsAsFactors = TRUE)
-# 
-# 
-# rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
-# # ranLevels = list(station = rL.station)
-# rL.year = HmscRandomLevel(units = levels(studyDesign$year))
-# 
-# ranLevels = list(station = rL.station,
-#                  year = rL.year)
+#13.10.2025 commenting out to try with gradient
+#19.10.25 adding back in, removing gradient
+#13.10.2025 adding spatial & year rLs
+studyDesign <- data.frame(station = as.factor(grid$station),
+                          #station = xy,
+                          year = as.factor(grid$year),
+                          stringsAsFactors = TRUE)
+
+
+rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
+# ranLevels = list(station = rL.station)
+rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+
+ranLevels = list(station = rL.station,
+                 year = rL.year)
 
 
 ################################################################
@@ -205,14 +209,14 @@ cat("Elapsed time:", end_time - start_time, "\n")
 #############################################################################
 
 # 13.10.2025 commenting out to try with grandient
-
-# predY <- predict(model,
-#                  XData = XData,
-#                  studyDesign = studyDesign,
-#                  ranLevels = ranLevels#, 
-#                  # predictEtaMean = TRUE, # 13.10 commented out
-#                  # expected = TRUE # 13.10 commented out
-# )
+# 19.10.25 trying without gradient
+predY <- predict(model,
+                 XData = XData,
+                 studyDesign = studyDesign,
+                 ranLevels = ranLevels#,
+                 # predictEtaMean = TRUE, # 13.10 commented out
+                 # expected = TRUE # 13.10 commented out
+)
 
 #############################################################################
 
