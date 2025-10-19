@@ -39,8 +39,8 @@ XData <- data.frame(station = as.factor(grid$station), #19.10.25
                     ph = grid$ph,
                     depth = grid$depth)
 
-xy = as.matrix(cbind(grid$lon, grid$lat))
-rownames(xy) = as.character(grid$station)
+xy = as.matrix(cbind(XData$lon, XData$lat))
+rownames(xy) = as.character(XData$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 # xy <- unique(xy) 
 
