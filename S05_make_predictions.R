@@ -92,20 +92,21 @@ colnames(xy) = c("x-coordinate", "y-coordinate")
 
 ################################################################
 #13.10.2025 commenting out to try with gradient
-#19.10.25 adding back in, removing gradient
+#19.10.25 adding back in, removing gradientm removing year
 #13.10.2025 adding spatial & year rLs
 studyDesign <- data.frame(station = as.factor(grid$station),
                           #station = xy,
-                          year = as.factor(grid$year),
+                          # year = as.factor(grid$year),
                           stringsAsFactors = TRUE)
 
 
 rL.station = HmscRandomLevel(sData = xy, sMethod = "NNGP")
 # ranLevels = list(station = rL.station)
-rL.year = HmscRandomLevel(units = levels(studyDesign$year))
+#rL.year = HmscRandomLevel(units = levels(studyDesign$year))
 
-ranLevels = list(station = rL.station,
-                 year = rL.year)
+ranLevels = list(station = rL.station#,
+                 #year = rL.year
+                 )
 
 
 ################################################################
