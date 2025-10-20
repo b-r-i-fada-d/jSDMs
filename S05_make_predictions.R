@@ -32,7 +32,7 @@ grid <- grid %>% filter(month == 11)
 grid <- grid %>%
   distinct(station, .keep_all = TRUE)
 
-grid <- grid[sample(nrow(grid), 2), ]
+grid <- grid[sample(nrow(grid), 10), ]
 
 
 # XData <- data.frame(station = as.factor(grid$station), #19.10.25 added in
@@ -243,7 +243,7 @@ cat("Elapsed time:", end_time - start_time, "\n")
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel.RData"))
+save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel_10s.RData"))
 # #############################################################################
 
 # 
