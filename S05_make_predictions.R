@@ -3,7 +3,7 @@
 #SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=4:00:00
+#SBATCH --time=10:00:00
 #SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -32,7 +32,7 @@ grid <- grid %>% filter(month == 11)
 grid <- grid %>%
   distinct(station, .keep_all = TRUE)
 
-grid <- grid[sample(nrow(grid), 10), ]
+# grid <- grid[sample(nrow(grid), 10), ]
 
 
 # XData <- data.frame(station = as.factor(grid$station), #19.10.25 added in
