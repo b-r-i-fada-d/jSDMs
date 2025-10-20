@@ -28,7 +28,7 @@ grid <- grid %>% drop_na()
 grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
 grid <- grid %>% filter(year == 2020)
-#grid <- grid %>% filter(month == 11) #20.10.25 commenting out
+grid <- grid %>% filter(month == 11) #20.10.25 commenting out
 # grid <- grid %>% 
 #   distinct(station, .keep_all = TRUE)  #20.10.25 commenting out
 
@@ -243,7 +243,7 @@ cat("Elapsed time:", end_time - start_time, "\n")
 
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel_2020.RData"))
+save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel_2020_11.RData"))
 # #############################################################################
 
 # 
