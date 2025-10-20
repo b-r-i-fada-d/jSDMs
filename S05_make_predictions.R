@@ -241,7 +241,7 @@ cat("Elapsed time:", end_time - start_time, "\n")
 
 #############################################################################
 
-EpredY <- Reduce("+", predY) / length(predY)
+EpredY <- Reduce("+", predY) / length(predY) 
 
 save(EpredY, file = file.path("results_station_randomlevel/predictions_station_randomlevel_2020_11.RData"))
 # #############################################################################
