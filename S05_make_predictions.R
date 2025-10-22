@@ -25,10 +25,10 @@ model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
 output_prefix <- "model"
 
 grid <- grid %>% drop_na()
-grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
+# grid <- grid %>% rename(temp = SBT, month = Month, year = Year)
 
-grid <- grid %>% filter(year == 2020)
-grid <- grid %>% filter(month == 11) #20.10.25 commenting out
+# grid <- grid %>% filter(year == 2020)
+# grid <- grid %>% filter(month == 11) #20.10.25 commenting out
 # grid <- grid %>% 
 #   distinct(station, .keep_all = TRUE)  #20.10.25 commenting out
 
