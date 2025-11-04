@@ -1,29 +1,29 @@
-# #!/usr/bin/env Rscript
-# 
-# #SBATCH --job-name=HMSC-HPC.Post
-# #SBATCH --cpus-per-task=4
-# #SBATCH --mem-per-cpu=32G
-# #SBATCH --time=2:00:00
-# #SBATCH --partition=cpu
-# #SBATCH --output=%x.%j.out
-# #SBATCH --error=%x.%j.err
-# 
-# source("argument_parser.R")
-# 
-# parser <- build.s02.argparser()
-# arguments <- parser$parse_args()
-# 
-# 
-# library("Hmsc")
-# library("tidyverse")
-# library("ggplot2")
-# library("vioplot")
-# library("colorspace")
-# library("jsonify")
-# 
-# model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
-# output_prefix <- "model"
-# 
+#!/usr/bin/env Rscript
+
+#SBATCH --job-name=HMSC-HPC.Post
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=32G
+#SBATCH --time=2:00:00
+#SBATCH --partition=cpu
+#SBATCH --output=%x.%j.out
+#SBATCH --error=%x.%j.err
+
+source("argument_parser.R")
+
+parser <- build.s02.argparser()
+arguments <- parser$parse_args()
+
+
+library("Hmsc")
+library("tidyverse")
+library("ggplot2")
+library("vioplot")
+library("colorspace")
+library("jsonify")
+
+model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
+output_prefix <- "model"
+
 # #### --- SHOW PARAMETER ESTIMATES --- ####
 # 
 # # Optional user-controlled parameters
@@ -228,19 +228,6 @@
 
 
 
-
-
-
-#!/usr/bin/env Rscript
-
-#SBATCH --job-name=HMSC-HPC.Post
-#SBATCH --cpus-per-task=4
-#SBATCH --mem-per-cpu=32G
-#SBATCH --time=2:00:00
-#SBATCH --partition=cpu
-#SBATCH --output=%x.%j.out
-#SBATCH --error=%x.%j.err
-
 # -----------------------------------------------------------------------------
 # HMSC post-processing (straightforward, minimal branching per user's choice B)
 # Assumptions (as provided):
@@ -248,28 +235,6 @@
 #  - traits>1     = NO   (model$nt == 1 or <=1) -> skip gamma plotting
 #  - randomLevels>0 = YES (model$nr > 0)
 # -----------------------------------------------------------------------------
-
-source("argument_parser.R")
-parser <- build.s02.argparser()
-arguments <- parser$parse_args()
-
-# ---- packages ----
-required_pkgs <- c("Hmsc", "tidyverse", "ggplot2", "vioplot", "colorspace", "jsonify", "writexl", "corrplot")
-missing_pkgs <- required_pkgs[!sapply(required_pkgs, requireNamespace, quietly = TRUE)]
-if(length(missing_pkgs)) stop("Missing packages: ", paste(missing_pkgs, collapse = ", "), ". Install them and re-run.")
-
-suppressPackageStartupMessages({
-  library(Hmsc)
-  library(tidyverse)
-  library(ggplot2)
-  library(vioplot)
-  library(colorspace)
-  library(jsonify)
-  library(writexl)
-  library(corrplot)
-})
-
-message("Packages loaded: ", paste(required_pkgs, collapse = ", "))
 
 # ---- outputs & model file ----
 output_prefix <- "model"
