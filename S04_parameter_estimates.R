@@ -126,39 +126,39 @@ if(model$nr + length(covariates) > 1 && model$ns > 1) {
   }
 }
 
-# --- BETA PLOTS --- #
-
-if(model$nc > 1) {
-  postBeta <- getPostEstimate(model, parName = "Beta")
-  
-  beta_filename <- paste0(output_prefix, "_parameter_estimates_Beta.xlsx")
-  beta_filename <- file.path(arguments$output_dir, beta_filename)
-  
-  me <- cbind(Species = model$spNames, as.data.frame(t(postBeta$mean)))
-  po <- cbind(Species = model$spNames, as.data.frame(t(postBeta$support)))
-  ne <- cbind(Species = model$spNames, as.data.frame(t(postBeta$supportNeg)))
-  
-  writexl::write_xlsx(
-    list("Posterior mean" = me, "Pr(x>0)" = po, "Pr(x<0)" = ne),
-    path = beta_filename
-  )
-}
-
-
-showNames <- if(is.null(show.sp.names.beta))is.null(model$phyloTree) && model$ns <= 30 else show.sp.names.beta
-plotTreeHere <- !is.null(model$phyloTree) && (is.null(plotTree) || plotTree)
-
-plotBeta(model, post = postBeta, supportLevel = support.level.beta, param = "Sign",
-         plotTree = plotTreeHere,
-         covNamesNumbers = c(TRUE, FALSE),
-         spNamesNumbers = c(showNames, FALSE),
-         cex = c(0.6, 0.6, 0.8))
-mymain <- "BetaPlot"
-if(!is.null(model$phyloTree)) {
-  rhovals <- unlist(poolMcmcChains(convertToCodaObject(model)$Rho))
-  mymain <- paste0(mymain, ", E[rho] = ", round(mean(rhovals), 2), ", Pr[rho>0] = ", round(mean(rhovals > 0), 2))
-}
-title(main = mymain, line = 2.5, cex.main = 0.8)
+# # --- BETA PLOTS --- #
+# 
+# if(model$nc > 1) {
+#   postBeta <- getPostEstimate(model, parName = "Beta")
+#   
+#   beta_filename <- paste0(output_prefix, "_parameter_estimates_Beta.xlsx")
+#   beta_filename <- file.path(arguments$output_dir, beta_filename)
+#   
+#   me <- cbind(Species = model$spNames, as.data.frame(t(postBeta$mean)))
+#   po <- cbind(Species = model$spNames, as.data.frame(t(postBeta$support)))
+#   ne <- cbind(Species = model$spNames, as.data.frame(t(postBeta$supportNeg)))
+#   
+#   writexl::write_xlsx(
+#     list("Posterior mean" = me, "Pr(x>0)" = po, "Pr(x<0)" = ne),
+#     path = beta_filename
+#   )
+# }
+# 
+# 
+# showNames <- if(is.null(show.sp.names.beta))is.null(model$phyloTree) && model$ns <= 30 else show.sp.names.beta
+# plotTreeHere <- !is.null(model$phyloTree) && (is.null(plotTree) || plotTree)
+# 
+# plotBeta(model, post = postBeta, supportLevel = support.level.beta, param = "Sign",
+#          plotTree = plotTreeHere,
+#          covNamesNumbers = c(TRUE, FALSE),
+#          spNamesNumbers = c(showNames, FALSE),
+#          cex = c(0.6, 0.6, 0.8))
+# mymain <- "BetaPlot"
+# if(!is.null(model$phyloTree)) {
+#   rhovals <- unlist(poolMcmcChains(convertToCodaObject(model)$Rho))
+#   mymain <- paste0(mymain, ", E[rho] = ", round(mean(rhovals), 2), ", Pr[rho>0] = ", round(mean(rhovals > 0), 2))
+# }
+# title(main = mymain, line = 2.5, cex.main = 0.8)
 
 # --- GAMMA PLOTS --- #
 
