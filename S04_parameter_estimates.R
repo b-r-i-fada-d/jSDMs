@@ -24,7 +24,6 @@ library("jsonify")
 model <- readRDS(file.path(gsub("\\.rds$", "_fitted.rds", arguments$model_rds)))
 output_prefix <- "model"
 
-
 #### --- SHOW PARAMETER ESTIMATES --- ####
 
 # Optional user-controlled parameters
@@ -160,7 +159,6 @@ if(!is.null(model$phyloTree)) {
   mymain <- paste0(mymain, ", E[rho] = ", round(mean(rhovals), 2), ", Pr[rho>0] = ", round(mean(rhovals > 0), 2))
 }
 title(main = mymain, line = 2.5, cex.main = 0.8)
-
 
 # --- GAMMA PLOTS --- #
 
