@@ -49,7 +49,7 @@ Y = as.matrix(Y)
 
 # --- Select environmental data
 
-XData = data.frame(year = as.factor(df$year), month = as.factor(df$month),
+XData = data.frame(year = as.factor(df$year), #month = as.factor(df$month),
                    o2 = df$o2, temp = df$temp,
                    ph = df$ph, depth = df$depth)
 
@@ -80,7 +80,7 @@ ranLevels = list(station = rL.station,
 
 # --- Regression model for environmental covariates
 
-XFormula = ~ o2 + temp + ph + depth + month + year
+XFormula = ~ o2 + temp + ph + depth + year # + month 
 
 #### --- Construct the model --- ####
 
