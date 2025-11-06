@@ -12,10 +12,10 @@ source("argument_parser.R")
 parser <- build.s03.argparser()
 arguments <- parser$parse_args()
 
-library(Hmsc)
-library(tidyverse)
-library(ggplot2)
-library(parallel)
+library("Hmsc")
+library("tidyverse")
+library("ggplot2")
+library("parallel")
 
 nParallel <- 40
 
@@ -31,7 +31,7 @@ rownames(xy) = as.character(grid$station)
 colnames(xy) = c("x-coordinate", "y-coordinate")
 
 XData.grid <- data.frame(year = as.factor(grid$year),
-                    month = as.factor(grid$month),
+                    # month = as.factor(grid$month),
                     o2 = grid$o2,
                     temp = grid$temp,
                     ph = grid$ph,
