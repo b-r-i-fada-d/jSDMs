@@ -3,8 +3,8 @@
 #SBATCH --job-name=HMSC-HPC.Post
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=32G
-#SBATCH --time=05:00:00
-#SBATCH --partition=cpu
+#SBATCH --time=14:00:00
+#SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
 
@@ -41,6 +41,32 @@ fits_file <- file.path(arguments$output_dir, fits_file)
 
 save(MF, MFCV, WAIC, file = fits_file)
 
+#### --- SAVE SUMMARY TABLE (CSV) --- ####
+
+summary_df <- data.frame(
+  Metric = c("TjurR2", "R2", "AUC", "SR2", "WAIC"),
+  Mean_Explanatory = c(
+    mean(MF$TjurR2, na.rm = TRUE),
+    mean(MF$R2, na.rm = TRUE),
+    mean(MF$AUC, na.rm = TRUE),
+    mean(MF$SR2, na.rm = TRUE),
+    mean(WAIC$WAIC, na.rm = TRUE)
+  ),
+  Mean_Predictive = c(
+    mean(MFCV$TjurR2, na.rm = TRUE),
+    mean(MFCV$R2, na.rm = TRUE),
+    mean(MFCV$AUC, na.rm = TRUE),
+    mean(MFCV$SR2, na.rm = TRUE),
+    NA  # WAIC has no predictive component
+  )
+)
+
+summary_csv_path <- file.path(
+  arguments$output_dir,
+  paste0(output_prefix, "_fit_summary.csv")
+)
+
+write.csv(summary_df, summary_csv_path, row.names = FALSE)
 
 #### --- SHOW MODEL FIT --- ####
 
