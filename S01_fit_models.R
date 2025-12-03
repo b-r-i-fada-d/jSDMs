@@ -44,7 +44,7 @@ df <- df %>% drop_na()
 # --- Select species data
 
 Y <- df %>%
-  dplyr::select(10:114) # just species columns
+  dplyr::select(10:103) # just species columns
 Y = as.matrix(Y)
 
 # --- Select environmental data
