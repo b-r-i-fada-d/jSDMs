@@ -3,7 +3,7 @@
 #SBATCH --job-name=HMSC-HPC.Predict
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=16G
-#SBATCH --time=15:00:00
+#SBATCH --time=30:00:00
 #SBATCH --partition=largemem
 #SBATCH --output=%x.%j.out
 #SBATCH --error=%x.%j.err
@@ -59,5 +59,5 @@ cat("Elapsed time:", end_time - start_time, "\n")
 # predY is a list (from multiple chains/samples), average to get posterior mean
 EpredY <- Reduce("+", predY) / length(predY)
 
-save(predY, file = file.path("results_2014-2024/predictions_raw.RData"))
-save(EpredY, file = file.path("results_2014-2024/predictions_2014-2024.RData"))
+save(predY, file = file.path("results_2014-2024_no_month_1000_bottom_env/Predictions_raw.RData"))
+save(EpredY, file = file.path("results_2014-2024_no_month_1000_bottom_env/predictions.RData"))
