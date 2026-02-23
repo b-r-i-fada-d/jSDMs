@@ -74,7 +74,33 @@ R2_candidates <- list(MF$TjurR2, MF$R2, MF$SR2)
 R2 <- NULL
 for(x in R2_candidates) if(!is.null(x)) { R2 <- x; break }
 if(!is.null(R2)) vals <- rbind(vals, R2)
-write.csv(vals, file = file.path(arguments$output_dir, paste0(output_prefix, "_parameter_estimates_VP.csv")), row.names = FALSE)
+
+### edits here 23.02.26
+# write.csv(vals, file = file.path(arguments$output_dir, paste0(output_prefix, "_parameter_estimates_VP.csv")), row.names = FALSE)
+# --- attach REAL covariate names ---
+cov_names <- colnames(model$X)
+
+if(is.null(cov_names))
+  stop("Could not extract covariate names from model$X")
+
+if(ncol(vals) != length(cov_names))
+  stop("Mismatch between VP columns and model$X columns")
+
+colnames(vals) <- cov_names
+
+# --- attach VP group names if present ---
+if(!is.null(VP$groupNames)) {
+  rownames(vals) <- VP$groupNames
+}
+
+write.csv(vals,
+          file = file.path(arguments$output_dir,
+                           paste0(output_prefix, "_parameter_estimates_VP.csv")),
+          row.names = TRUE)
+
+
+### end here
+
 plotVariancePartitioning(hM = model, VP = VP, main = "Proportion of explained variance", cex.main = 0.8, cols = mycols)
 
 # If R2 available, plot raw variance partitioning scaled by R2
